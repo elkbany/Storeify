@@ -1,4 +1,3 @@
-
 // Variables for pagination, filtering, and sorting
 let products = [];
 let filteredProducts = [];
@@ -38,7 +37,7 @@ function displayProducts() {
         productCard.className = 'product-card';
         productCard.innerHTML = `
             <img src="${product.image}" alt="${product.title}">
-            <h3>${product.title}</h3>
+            <a href="product-details.html?id=${product.id}" class="product-title">${product.title}</a>
             <p>$${product.price.toFixed(2)}</p>
             <button onclick="addToCart('${product.title}')">Add to Cart</button>
         `;
