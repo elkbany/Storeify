@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Form</title>
+    <link rel="stylesheet" href="../CSS/Checkout.css">
+</head>
+<body>
+    <div class="container">
+        <div class="checkout-container">
+            <div class="left-side">
+                <h2>Billing Details</h2>
+                <form id="checkout-form">
+                    <div class="form-group">
+                        <label for="firstName">First Name*</label>
+                        <input type="text" id="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="companyName">Company Name</label>
+                        <input type="text" id="companyName">
+                    </div>
+                    <div class="form-group">
+                        <label for="streetAddress">Street Address*</label>
+                        <input type="text" id="streetAddress" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apartment">Apartment, floor, etc. (optional)</label>
+                        <input type="text" id="apartment">
+                    </div>
+                    <div class="form-group">
+                        <label for="townCity">Town/City*</label>
+                        <input type="text" id="townCity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number*</label>
+                        <input type="tel" id="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address*</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group checkbox">
+                        <input type="checkbox" id="saveInfo">
+                        <label for="saveInfo">Save this information for faster check-out next time</label>
+                    </div>
+                </form>
+            </div>
+            <div class="right-side">
+                <div class="order-summary">
+                    <h3>Order Summary</h3>
+                    <div class="product-list" id="productList">
+                        <!-- Products will be inserted here by JavaScript -->
+                    </div>
+                    <div class="subtotal">
+                        <span>Subtotal</span>
+                        <span id="subtotal-amount">$0.00</span>
+                    </div>
+                    <div class="shipping">
+                        <span>Shipping</span>
+                        <span>Free</span>
+                    </div>
+                    <div class="total">
+                        <span>Total</span>
+                        <span id="total-amount">$0.00</span>
+                    </div>
+                    <div class="payment-methods">
+                        <div class="payment-option">
+                            <input type="radio" id="bank" name="payment" value="bank">
+                            <label for="bank">Bank</label>
+                        </div>
+                        <div class="payment-option">
+                            <input type="radio" id="cash" name="payment" value="cash" checked>
+                            <label for="cash">Cash on delivery</label>
+                        </div>
+                    </div>
+                    <div class="coupon-section">
+                        <input type="text" id="couponCode" placeholder="Coupon Code">
+                        <button id="applyCoupon">Apply Coupon</button>
+                    </div>
+                    <button id="placeOrder" class="place-order-btn">Place Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../JS/Checkout.js"></script>
+</body>
+</html>

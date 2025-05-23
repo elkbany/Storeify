@@ -1,0 +1,126 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+.container {
+    display: flex;
+    width: 80%;
+    max-width: 900px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+.image-section {
+    flex: 1;
+    background-color: #e6f0fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0; /* Remove padding to allow image to fill the section */
+}
+.image-section img {
+    width: 100%; /* Make the image fill the width of the image-section */
+    height: 100%; /* Make the image fill the height of the image-section */
+    object-fit: cover; /* Ensure the image scales without distortion */
+}
+.form-section {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+h2 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+p {
+    text-align: center;
+    color: #666;
+    margin-bottom: 20px;
+}
+.form-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.form-toggle button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #ddd;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.form-toggle button.active {
+    background-color: #ff4d4d;
+    color: white;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+.form-group input:focus {
+    outline: none;
+    border-color: #ff4d4d;
+}
+.error {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+}
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+button[type="submit"]:hover {
+    background-color: #e04343;
+}
+.switch-link {
+    text-align: center;
+    margin-top: 15px;
+}
+.switch-link a {
+    color: #ff4d4d;
+    text-decoration: none;
+}
+#logoutBtn {
+    display: none;
+    width: 100%;
+    padding: 12px;
+    background-color: #666;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+#logoutBtn:hover {
+    background-color: #555;
+}
