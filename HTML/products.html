@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Shopify</title>
+    <link rel="stylesheet" href="../CSS/Home.css">
+    <link rel="stylesheet" href="../CSS/Products.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+          integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+          <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+          <link rel="stylesheet" href="../assets/fonts/Heading-Pro-ExtraBold-trial.ttf">
+</head>
+<body>
+    <header>
+        <div class="logo">Shopify</div>
+        <nav>
+            <a href="Home.html">Home</a>
+            <a href="#">Contact</a>
+            <a href="#">About</a>
+            <a href="#">Sign Up</a>
+        </nav>
+        <div class="search-bar">
+            <input type="text" placeholder="What are you looking for?">
+            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <span class="heart"> <i class="fa-regular fa-heart"></i></span>
+            <span class="cart"><i class="fa-solid fa-cart-shopping"></i></span>
+            <span class="profile"><i class="fa-solid fa-circle-user"></i></span>
+            
+        </div>
+    
+    </header>
+    <main>
+        <div class="banner">
+            <div class="banner-text">
+                <h1>PRODUCTS</h1>
+                <p><a href="Home.html">HOME</a> / PRODUCTS</p>
+            </div>
+        </div>
+        <div class="products-container">
+            <!-- Sidebar على الشمال -->
+            <aside class="sidebar">
+                <div class="filter-section">
+                    <h3>Categories</h3>
+                    <select id="category-filter">
+                        <option value="">All</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="jewelery">Jewelry</option>
+                        <option value="men's clothing">Men's Clothing</option>
+                        <option value="women's clothing">Women's Clothing</option>
+                    </select>
+                </div>
+
+                <div class="filter-section">
+                    <h3>Availability</h3>
+                    <label><input type="checkbox" id="in-stock"> In Stock</label>
+                </div>
+
+                <div class="filter-section">
+                    <h3>Price</h3>
+                    <input type="range" id="price-range" min="0" max="1000" value="1000">
+                    <p>Price: $0 - $<span id="price-value">1000</span></p>
+                </div>
+
+                <!-- Color و Brand و Size مش هيشتغلوا بشكل كامل لأن الـ API مش فيه بيانات ليهم، بس هنحطهم للتصميم -->
+                <div class="filter-section">
+                    <h3>Color</h3>
+                    <label><input type="checkbox" disabled> Blue</label><br>
+                    <label><input type="checkbox" disabled> Green</label><br>
+                    <label><input type="checkbox" disabled> Multicolor</label><br>
+                    <label><input type="checkbox" disabled> Red</label>
+                </div>
+
+                <div class="filter-section">
+                    <h3>Brand</h3>
+                    <select disabled>
+                        <option>Brand 1</option>
+                        <option>Brand 2</option>
+                    </select>
+                </div>
+
+                <div class="filter-section">
+                    <h3>Size</h3>
+                    <label><input type="checkbox" disabled> 50g</label><br>
+                    <label><input type="checkbox" disabled> 100g</label><br>
+                    <label><input type="checkbox" disabled> 250g</label>
+                </div>
+            </aside>
+
+            <!-- قسم المنتجات على اليمين -->
+            <section class="products-section">
+                <div class="products-header">
+                    <p>You've viewed <span id="viewed-items">0</span> of <span id="total-items">0</span> products</p>
+                    <div class="sort-filter">
+                        <select id="sort-by">
+                            <option value="title-asc">Alphabetically, A-Z</option>
+                            <option value="title-desc">Alphabetically, Z-A</option>
+                            <option value="price-asc">Price, Low to High</option>
+                            <option value="price-desc">Price, High to Low</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="products-grid" id="productsGrid"></div>
+                <div class="pagination">
+                    <button id="prev-page" disabled>Previous</button>
+                    <span id="page-info">1</span>
+                    <button id="next-page">Next</button>
+                </div>
+            </section>
+        </div>
+    </main>
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>SHOP</h3>
+                <ul>
+                    <li>Energy Drinks</li>
+                    <li>Protein</li>
+                    <li>Pre-Workout</li>
+                    <li>Plant Therapy</li>
+                    <li>Creatine</li>
+                    <li>Weight Loss</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>ACCOUNT</h3>
+                <ul>
+                    <li>Cart</li>
+                    <li>My Account</li>
+                    <li>My Orders</li>
+                    <li>Wishlist</li>
+                    <li>Affiliate Program</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>INFORMATION</h3>
+                <ul>
+                    <li>Track Order</li>
+                    <li>Returns</li>
+                    <li>Shipping Info</li>
+                    <li>Help</li>
+                    <li>Careers</li>
+                    <li>Gift Cards</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>CUSTOMER SERVICES</h3>
+                <ul>
+                    <li>Track Order</li>
+                    <li>Returns</li>
+                    <li>Shipping Info</li>
+                    <li>Recalls & Advisories</li>
+                    <li>Store Locator</li>
+                    <li>Help</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Footer -->
+        <div class="footer-bottom">
+            <p>© 2025 - Sikra. All Rights Reserved.</p>
+            <div class="payment-methods">
+                <img src="../assets/images/payment/payment.png" alt="AMEX">
+            </div>
+        </div>
+    </footer>
+    <script src="../JS/Products.js"></script>
+</body>
+</html>
