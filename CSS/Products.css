@@ -5,15 +5,13 @@
     font-style: normal;
 }
 
-/* Styling Body */
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 400; /* For Normal text  */
+    font-weight: 400; 
     line-height: 1.6;
     box-sizing: border-box;
 }
 
-/* البanner */
 main .banner {
     background-image: linear-gradient(#20262ed6, rgb(0 0 0 / 71%)), url(../assets/images/pexels-apasaric-3423860.jpg);
     background-size: cover;
@@ -63,7 +61,6 @@ main .banner {
     padding: 40px 0;
 }
 
-/* Sidebar على الشمال */
 .sidebar {
     width: 25%;
     background: #fff;
@@ -112,7 +109,7 @@ main .banner {
 
 .filter-section input[type="range"] {
     margin: 15px 0;
-    accent-color: #d32f2f; /* لون الـ slider */
+    accent-color: #d32f2f; 
 }
 
 .filter-section p {
@@ -122,7 +119,6 @@ main .banner {
     margin: 5px 0;
 }
 
-/* قسم المنتجات على اليمين */
 .products-section {
     width: 80%;
 }
@@ -201,7 +197,7 @@ main .banner {
 }
 
 .product-card .product-title:hover {
-    color: #d32f2f; /* Hover effect */
+    color: #d32f2f; 
 }
 
 .product-card p {
