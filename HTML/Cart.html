@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cart</title>
+        <link rel="stylesheet" href="../CSS/Cart.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+            integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer" />
+    </head>
+    <body>
+        <header>
+            <div class="logo">Shopify</div>
+            <nav>
+                <a href="Home.html">Home</a>
+                <a href="#">Contact</a>
+                <a href="#">About</a>
+                <a href="#">Sign Up</a>
+            </nav>
+            <div class="search-bar">
+                <input type="text" placeholder="What are you looking for?">
+                <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <span class="heart"> <i class="fa-regular fa-heart"></i></span>
+                <span class="cart"><i class="fa-solid fa-cart-shopping"></i></span>
+                <span class="profile"><i class="fa-solid fa-circle-user"></i></span>
+            </div>
+        </header>
+        <div class="breadcrumb">Home / Cart</div>
+        <main class="cart-container">
+            <div class="cart-header">
+                <div>Product</div>
+                <div>Price</div>
+                <div>Quantity</div>
+                <div>Subtotal</div>
+            </div>
+
+            <div class="cart-item">
+                <div class="product">
+                    <img src="https://saboocomputers.com/wp-content/uploads/2024/04/MNT_E1916HV_1-1.jpg" alt="LCD Monitor" />
+                    <span>LCD Monitor</span>
+                </div>
+                <div class="price">$600</div>
+                <div class="quantity">
+                    <input type="number" value="1" min="1" />
+                </div>
+                <div class="subtotal">$600</div>
+            </div>
+
+            <div class="cart-item">
+                <div class="product">
+                    <img src="https://www.geekmaxi.com/img/p/3/9/0/4/3904-thickbox_default.webp" alt="H1 Gamepad" />
+                    <span>H1 Gamepad</span>
+                </div>
+                <div class="price">$150</div>
+                <div class="quantity">
+                    <input type="number" value="2" min="1" />
+                </div>
+                <div class="subtotal">$300</div>
+            </div>
+
+            <div class="cart-actions">
+            <button onclick="window.location.href='../HTML/Home.html'">Return To Shop</button>
+            <button onclick="updateCart()">Update Cart</button>
+        </div>
+    </main>
+    <div class="footer">
+        <div class="coupon">
+            <input type="text" placeholder="Coupon Code">
+            <button>Apply Coupon</button>
+        </div>
+
+        <div class="cart-total">
+            <h3>Cart Total</h3>
+            <p><span>Subtotal:</span> <span>$17.50</span></p>
+            <p><span>Shipping:</span> <span>Free</span></p>
+            <p><strong>Total:</strong> <strong>$17.50</strong></p>
+            <button class="checkout-btn">Proceed to checkout</button>
+        </div>
+    </div>
+    </body>
+    <script src="../JS/Cart.js"></script>
+    </body>
+</html>

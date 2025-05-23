@@ -1,8 +1,9 @@
-// Variables for pagination, filtering, and sorting
+// Variables for pagination, filtering, sorting, and cart
 let products = [];
 let filteredProducts = [];
 let currentPage = 1;
 const itemsPerPage = 9;
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 // Fetch products from API
 async function fetchProducts() {
@@ -12,6 +13,8 @@ async function fetchProducts() {
         filteredProducts = [...products];
         displayProducts();
         updatePagination();
+        updateCartIcon();
+        updateCartSidebar(); // Add this to update the sidebar on load
     } catch (error) {
         console.error('Error fetching products:', error);
         document.getElementById('productsGrid').innerHTML = '<p>Error loading products. Please try again later.</p>';
@@ -23,12 +26,10 @@ function displayProducts() {
     const productsGrid = document.getElementById('productsGrid');
     productsGrid.innerHTML = '';
 
-    // Calculate start and end indices for pagination
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     const paginatedProducts = filteredProducts.slice(start, end);
 
-    // Update viewed items
     document.getElementById('viewed-items').textContent = Math.min(end, filteredProducts.length);
     document.getElementById('total-items').textContent = filteredProducts.length;
 
@@ -39,18 +40,121 @@ function displayProducts() {
             <img src="${product.image}" alt="${product.title}">
             <a href="product-details.html?id=${product.id}" class="product-title">${product.title}</a>
             <p>$${product.price.toFixed(2)}</p>
-            <button onclick="addToCart('${product.title}')">Add to Cart</button>
+            <button onclick="addToCart(${product.id}, '${product.title}', ${product.price})">Add to Cart</button>
         `;
         productsGrid.appendChild(productCard);
     });
 }
 
-// Add to cart (placeholder function)
-function addToCart(productName) {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    cart.push(productName);
+// Add to cart function
+function addToCart(productId, productTitle, productPrice) {
+    const item = cart.find(item => item.id === productId);
+    if (item) {
+        item.quantity += 1;
+    } else {
+        cart.push({ id: productId, title: productTitle, price: productPrice, quantity: 1 });
+    }
     localStorage.setItem('cart', JSON.stringify(cart));
-    alert(`${productName} added to cart!`);
+    updateCartSidebar();
+    updateCartIcon();
+    openCartSidebar();
+}
+
+// Update cart icon with item count
+function updateCartIcon() {
+    const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const cartIcon = document.querySelector('.cart');
+    cartIcon.innerHTML = `<i class="fa-solid fa-cart-shopping"></i>${cartCount > 0 ? `<span class="cart-count">${cartCount}</span>` : ''}`;
+}
+
+// Update cart sidebar
+function updateCartSidebar() {
+    const cartSidebar = document.getElementById('cart-sidebar');
+    if (cartSidebar) {
+        if (cart.length === 0) {
+            cartSidebar.innerHTML = `
+                <div class="cart-header">
+                    <h3>Cart</h3>
+                    <span class="close-cart" onclick="closeCartSidebar()">×</span>
+                </div>
+                <div class="empty-cart">
+                    <p>Your cart is empty</p>
+                    <button onclick="closeCartSidebar()">Continue Shopping</button>
+                </div>
+            `;
+        } else {
+            cartSidebar.innerHTML = `
+                <div class="cart-header">
+                    <h3>Cart</h3>
+                    <span class="close-cart" onclick="closeCartSidebar()">×</span>
+                </div>
+                <div class="free-shipping">
+                    <p><strong>FREE SHIPPING ON ORDERS $100.00</strong></p>
+                    <p>Spend $100.00 more and get free shipping!</p>
+                    <div class="progress-bar"><div style="width: ${Math.min((cart.reduce((sum, item) => sum + item.price * item.quantity, 0) / 100) * 100, 100)}%;"></div></div>
+                </div>
+                ${cart.map(item => `
+                    <div class="cart-item">
+                        <img src="${products.find(p => p.id === item.id)?.image || ''}" alt="${item.title}">
+                        <div class="item-details">
+                            <p>${item.title}</p>
+                            <p>$${item.price.toFixed(2)}</p>
+                            <div class="quantity-control">
+                                <button onclick="updateQuantity(${item.id}, -1)">-</button>
+                                <span>${item.quantity}</span>
+                                <button onclick="updateQuantity(${item.id}, 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+                <div class="cart-total">
+                    <p>Subtotal: $${cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2)}</p>
+                    <p>Taxes and shipping calculated at checkout</p>
+                    <p>our cart is currently displayed in, the checkout will use USD at the most</p>
+                </div>
+                <div class="cart-actions">
+                    <button onclick="checkout()">Check Out</button>
+                    <button onclick="closeCartSidebar()">View Cart</button>
+                </div>
+            `;
+        }
+    }
+}
+
+// Update quantity
+function updateQuantity(productId, change) {
+    const item = cart.find(item => item.id === productId);
+    if (item) {
+        item.quantity += change;
+        if (item.quantity <= 0) {
+            cart = cart.filter(item => item.id !== productId);
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartSidebar();
+        updateCartIcon();
+    }
+}
+
+// Open cart sidebar
+function openCartSidebar() {
+    const cartSidebar = document.getElementById('cart-sidebar');
+    if (cartSidebar) {
+        updateCartSidebar(); // Ensure content is updated before opening
+        cartSidebar.style.right = '0';
+    }
+}
+
+// Close cart sidebar
+function closeCartSidebar() {
+    const cartSidebar = document.getElementById('cart-sidebar');
+    if (cartSidebar) {
+        cartSidebar.style.right = '-700px';
+    }
+}
+
+// Placeholder checkout function
+function checkout() {
+    alert('Checkout functionality to be implemented!');
 }
 
 // Update pagination
@@ -65,17 +169,14 @@ function updatePagination() {
 function applyFiltersAndSort() {
     let tempProducts = [...products];
 
-    // Category filter
     const category = document.getElementById('category-filter').value;
     if (category) {
         tempProducts = tempProducts.filter(product => product.category === category);
     }
 
-    // Price filter
     const maxPrice = parseFloat(document.getElementById('price-range').value);
     tempProducts = tempProducts.filter(product => product.price <= maxPrice);
 
-    // Sort
     const sortBy = document.getElementById('sort-by').value;
     if (sortBy === 'title-asc') {
         tempProducts.sort((a, b) => a.title.localeCompare(b.title));
@@ -88,7 +189,7 @@ function applyFiltersAndSort() {
     }
 
     filteredProducts = tempProducts;
-    currentPage = 1; // Reset to first page
+    currentPage = 1;
     displayProducts();
     updatePagination();
 }
@@ -97,10 +198,8 @@ function applyFiltersAndSort() {
 window.onload = function() {
     fetchProducts();
 
-    // Category filter
     document.getElementById('category-filter').addEventListener('change', applyFiltersAndSort);
 
-    // Price filter
     const priceRange = document.getElementById('price-range');
     const priceValue = document.getElementById('price-value');
     priceRange.addEventListener('input', () => {
@@ -108,10 +207,8 @@ window.onload = function() {
         applyFiltersAndSort();
     });
 
-    // Sort
     document.getElementById('sort-by').addEventListener('change', applyFiltersAndSort);
 
-    // Pagination
     document.getElementById('prev-page').addEventListener('click', () => {
         if (currentPage > 1) {
             currentPage--;
@@ -128,4 +225,7 @@ window.onload = function() {
             updatePagination();
         }
     });
+
+    // Add event listener to cart icon
+    document.querySelector('.cart').addEventListener('click', openCartSidebar);
 };
