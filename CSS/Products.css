@@ -101,7 +101,6 @@ nav a:hover {
 /* Banner Section */
 main .banner {
     background-image: linear-gradient(135deg, #20262ed6, rgb(0 0 0 / 71%)), url('../assets/images/pexels-apasaric-3423860.jpg');
-    background-size: cover;
     background-position: center;
     height: 300px;
     position: relative;
