@@ -37,9 +37,10 @@ function displayProducts() {
         const productCard = document.createElement('div');
         productCard.className = 'product-card';
         productCard.innerHTML = `
-            <img src="${product.image}" alt="${product.title}">
-            <a href="product-details.html?id=${product.id}" class="product-title">${product.title}</a>
+            <a href="../HTML/OneProduct.html?id=${product.id}" class="product-title">
+            <img src="${product.image}" alt="${product.title}">${product.title}
             <p>$${product.price.toFixed(2)}</p>
+            </a>
             <button onclick="addToCart(${product.id}, '${product.title}', ${product.price})">Add to Cart</button>
         `;
         productsGrid.appendChild(productCard);

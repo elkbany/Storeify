@@ -3,7 +3,6 @@ function switchForm(formType) {
     const loginForm = document.getElementById('loginForm');
     const registerBtn = document.getElementById('registerBtn');
     const loginBtn = document.getElementById('loginBtn');
-
     if (formType === 'register') {
         registerForm.style.display = 'block';
         loginForm.style.display = 'none';
@@ -22,20 +21,26 @@ function validateEmail(email) {
     return re.test(email);
 }
 
+function togglePassword(inputId, iconSpan) {
+    const input = document.getElementById(inputId);
+    if (input.type === 'password') {
+        input.type = 'text';
+        iconSpan.innerHTML = '<i class="fa fa-eye-slash"></i>';
+    } else {
+        input.type = 'password';
+        iconSpan.innerHTML = '<i class="fa fa-eye"></i>';
+    }
+}
+
 function handleRegister(event) {
     event.preventDefault();
-
     const name = document.getElementById('regName').value.trim();
     const email = document.getElementById('regEmail').value.trim();
     const password = document.getElementById('regPassword').value.trim();
-
-    // Reset error messages
     document.getElementById('regNameError').style.display = 'none';
     document.getElementById('regEmailError').style.display = 'none';
     document.getElementById('regPasswordError').style.display = 'none';
-
     let isValid = true;
-
     if (!name) {
         document.getElementById('regNameError').style.display = 'block';
         isValid = false;
@@ -49,19 +54,16 @@ function handleRegister(event) {
         document.getElementById('regPasswordError').style.display = 'block';
         isValid = false;
     }
-
     if (isValid) {
         const users = JSON.parse(localStorage.getItem('users')) || [];
-        if (users.some(user => user.email === email)) {
+        if (users.some(function(user) { return user.email === email; })) {
             alert('Email already registered!');
             return;
         }
-
-        const user = { name, email, password, authProvider: 'email' };
+        const user = { name: name, email: email, password: password, authProvider: 'email' };
         users.push(user);
         localStorage.setItem('users', JSON.stringify(users));
         sessionStorage.setItem('currentUser', JSON.stringify(user));
-
         alert('Registration successful! Redirecting to home page.');
         window.location.href = 'Home.html';
     }
@@ -69,16 +71,11 @@ function handleRegister(event) {
 
 function handleLogin(event) {
     event.preventDefault();
-
     const email = document.getElementById('logEmail').value.trim();
     const password = document.getElementById('logPassword').value.trim();
-
-    // Reset error messages
     document.getElementById('logEmailError').style.display = 'none';
     document.getElementById('logPasswordError').style.display = 'none';
-
     let isValid = true;
-
     if (!validateEmail(email)) {
         document.getElementById('logEmailError').style.display = 'block';
         isValid = false;
@@ -87,11 +84,11 @@ function handleLogin(event) {
         document.getElementById('logPasswordError').style.display = 'block';
         isValid = false;
     }
-
     if (isValid) {
         const users = JSON.parse(localStorage.getItem('users')) || [];
-        const user = users.find(u => u.email === email && u.password === password && u.authProvider === 'email');
-
+        const user = users.find(function(u) {
+            return u.email === email && u.password === password && u.authProvider === 'email';
+        });
         if (user) {
             sessionStorage.setItem('currentUser', JSON.stringify(user));
             alert('Login successful! Redirecting to home page.');
@@ -102,36 +99,6 @@ function handleLogin(event) {
     }
 }
 
-function handleCredentialResponse(response) {
-    const userInfo = parseJwt(response.credential);
-    const email = userInfo.email;
-    const name = userInfo.name || userInfo.given_name || 'Google User';
-
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    let user = users.find(u => u.email === email);
-
-    if (!user) {
-        user = { name, email, authProvider: 'google' };
-        users.push(user);
-        localStorage.setItem('users', JSON.stringify(users));
-        alert('Google Sign-Up successful! Redirecting to home page.');
-    } else {
-        alert('Google Sign-In successful! Redirecting to home page.');
-    }
-
-    sessionStorage.setItem('currentUser', JSON.stringify(user));
-    window.location.href = 'Home.html';
-}
-
-function parseJwt(token) {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-    return JSON.parse(jsonPayload);
-}
-
 function handleLogout() {
     sessionStorage.removeItem('currentUser');
     alert('Logged out successfully!');
@@ -140,7 +107,17 @@ function handleLogout() {
 
 window.onload = function() {
     const currentUser = sessionStorage.getItem('currentUser');
+    const greeting = document.getElementById('greeting');
     if (currentUser) {
-        window.location.href = 'Home.html';
+        var user = JSON.parse(currentUser);
+        greeting.style.display = 'block';
+        greeting.innerHTML = 'Welcome, ' + (user.name || user.email) + '! <br><button onclick="handleLogout()">Logout</button>';
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'none';
+        document.querySelector('.form-toggle').style.display = 'none';
+    } else {
+        greeting.style.display = 'none';
     }
+    document.getElementById('registerBtn').onclick = function() { switchForm('register'); };
+    document.getElementById('loginBtn').onclick = function() { switchForm('login'); };
 };

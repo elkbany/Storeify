@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storify-OneProduct</title>
+    <link rel="stylesheet" href="../CSS/OneProduct.css">
+    <link rel="stylesheet" href="../CSS/Products.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+          integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <header>
+        <div class="logo">Shopify</div>
+    
+        <nav>
+            <a href="Home.html">Home</a>
+            <a href="#">Contact</a>
+            <a href="#">About</a>
+            <a href="Login.html">Sign Up</a>
+        </nav>
+        <div class="search-bar">
+            <input type="text" placeholder="What are you looking for?">
+            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <span class="heart"> <i class="fa-regular fa-heart"></i></span>
+            <span class="cart"><i class="fa-solid fa-cart-shopping"></i></span>
+            <span class="profile"><a href="User.html"><i class="fa-solid fa-circle-user"></i></a></span>
+    
+        </div>
+    
+    </header>
+    <main>
+        <div class="product-container" id="productContainer">
+            <!-- Product details will be dynamically loaded here -->
+        </div>
+
+        <div class="related-items">
+            <h2><span class="highlight"></span> Related Items</h2>
+            <div class="related-products-grid" id="relatedProductsGrid">
+                <!-- Related products will be dynamically loaded here -->
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>SHOP</h3>
+                <ul>
+                    <li>Energy Drinks</li>
+                    <li>Protein</li>
+                    <li>Pre-Workout</li>
+                    <li>Plant Therapy</li>
+                    <li>Creatine</li>
+                    <li>Weight Loss</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>ACCOUNT</h3>
+                <ul>
+                    <li>Cart</li>
+                    <li>My Account</li>
+                    <li>My Orders</li>
+                    <li>Wishlist</li>
+                    <li>Affiliate Program</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>INFORMATION</h3>
+                <ul>
+                    <li>Track Order</li>
+                    <li>Returns</li>
+                    <li>Shipping Info</li>
+                    <li>Help</li>
+                    <li>Careers</li>
+                    <li>Gift Cards</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>CUSTOMER SERVICES</h3>
+                <ul>
+                    <li>Track Order</li>
+                    <li>Returns</li>
+                    <li>Shipping Info</li>
+                    <li>Recalls & Advisories</li>
+                    <li>Store Locator</li>
+                    <li>Help</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Footer -->
+        <div class="footer-bottom">
+            <p>© 2025 - Storeify. All Rights Reserved.</p>
+            <div class="payment-methods">
+                <img src="../assets/images/payment/payment.png" alt="AMEX">
+            </div>
+        </div>
+    </footer>
+
+    <script src="../JS/Oneproduct.js"></script>
+</body>
+</html>

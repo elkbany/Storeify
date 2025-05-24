@@ -3,97 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login and Register</title>
+    <title>Storeify Login</title>
     <link rel="stylesheet" href="../CSS/Login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <div class="container">
-        <div class="image-section">
-            <img src="../assets/images/image.jpg" alt="Shopping Cart">
-        </div>
-        
-        <div class="form-section">
-            <div class="form-toggle">
-                <button id="registerBtn" class="active">Register</button>
-                <button id="loginBtn">Login</button>
-            </div>
-
-            <!-- Register Form -->
-            <div id="registerForm">
-                <h2>Create an Account</h2>
-                <p>Enter your details below</p>
-                <form id="regForm" onsubmit="handleRegister(event)">
-                    <div class="form-group">
-                        <label for="regName">Name</label>
-                        <input type="text" id="regName" name="name" required>
-                        <div id="regNameError" class="error">Name cannot be empty</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="regEmail">Email</label>
-                        <input type="email" id="regEmail" name="email" required>
-                        <div id="regEmailError" class="error">Please enter a valid email</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="regPassword">Password</label>
-                        <input type="password" id="regPassword" name="password" required>
-                        <div id="regPasswordError" class="error">Password must be at least 6 characters and include a number, uppercase letter, lowercase letter, and special character (!@#$%^&*()_+-=[]{};:|\,.<>/?)</div>
-                    </div>
-                    <button type="submit">Create Account</button>
-                </form>
-                <div id="googleSignUpBtn" style="margin-top: 15px; text-align: center;">
-                    <div id="g_id_signup"
-                         data-type="standard"
-                         data-size="large"
-                         data-theme="outline"
-                         data-text="signup_with"
-                         data-shape="rectangular"
-                         data-logo_alignment="left"
-                         data-client_id="725507234317-ugqvmavfedl87bldnons9s8onpv3l9oc.apps.googleusercontent.com">
-                    </div>
-                </div>
-                <div class="switch-link">
-                    <p>Already have an account? <a href="#" onclick="switchForm('login')">Log in</a></p>
-                </div>
-            </div>
-
-            <!-- Login Form -->
-            <div id="loginForm" style="display: none;">
-                <h2>Login</h2>
-                <p>Enter your credentials below</p>
-                <form id="logForm" onsubmit="handleLogin(event)">
-                    <div class="form-group">
-                        <label for="logEmail">Email</label>
-                        <input type="email" id="logEmail" name="email" required>
-                        <div id="logEmailError" class="error">Please enter a valid email</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="logPassword">Password</label>
-                        <input type="password" id="logPassword" name="password" required>
-                        <div id="logPasswordError" class="error">Password cannot be empty</div>
-                    </div>
-                    <button type="submit">Login</button>
-                </form>
-                <div id="googleSignInBtn" style="margin-top: 15px; text-align: center;">
-                    <div id="g_id_signin"
-                         data-type="standard"
-                         data-size="large"
-                         data-theme="outline"
-                         data-text="signin_with"
-                         data-shape="rectangular"
-                         data-logo_alignment="left"
-                         data-client_id="725507234317-ugqvmavfedl87bldnons9s8onpv3l9oc.apps.googleusercontent.com">
-                    </div>
-                </div>
-                <div class="switch-link">
-                    <p>Don't have an account? <a href="#" onclick="switchForm('register')">Register</a></p>
-                </div>
-            </div>
-
-            <!-- Logout Button -->
-            <button id="logoutBtn" onclick="handleLogout()" style="display: none;">Logout</button>
-        </div>
+<header>
+    <div class="logo">Shopify</div>
+    <nav>
+        <a href="Home.html">Home</a>
+        <a href="#">Contact</a>
+        <a href="#">About</a>
+        <a href="Login.html">Sign Up</a>
+    </nav>
+    <div class="search-bar">
+        <input type="text" placeholder="What are you looking for?">
+        <button type="submit" class="seearchicona"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <span class="heart"><i class="fa-regular fa-heart"></i></span>
+        <span class="cart"><a href="Cart.html"><i class="fa-solid fa-cart-shopping"></i></a></span>
+        <span class="profile"><a href="User.html"><i class="fa-solid fa-circle-user"></i></a></span>
     </div>
-
-    <script src="../JS/Login.js"></script>
+</header>
+<div class="container">
+    <div class="image-section">
+        <img src="../assets/images/image.jpg" alt="Shopping Cart">
+    </div>
+    <div class="form-section">
+        <div id="greeting" style="display:none; text-align:center; margin-bottom:20px;"></div>
+<!--        <div class="form-toggle">-->
+<!--            <button id="registerBtn" class="active">Register</button>-->
+<!--            <button id="loginBtn">Login</button>-->
+<!--        </div>-->
+        <!-- Register Form -->
+        <div id="registerForm">
+            <h2>Create an Account</h2>
+            <p>Enter your details below</p>
+            <form id="regForm" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="regName">Name</label>
+                    <input type="text" id="regName" name="name" required>
+                    <div id="regNameError" class="error">Name cannot be empty</div>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input type="email" id="regEmail" name="email" required>
+                    <div id="regEmailError" class="error">Please enter a valid email</div>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <div style="position:relative;">
+                        <input type="password" id="regPassword" name="password" required>
+                        <span class="toggle-password" onclick="togglePassword('regPassword', this)">
+                            <i class="fa fa-eye"></i>
+                        </span>
+                    </div>
+                    <div id="regPasswordError" class="error">Password must be at least 6 characters and include a number, uppercase letter, lowercase letter, and special character (!@#$%^&*()_+-=[]{};:|\,.<>/?)</div>
+                </div>
+                <button type="submit" class="logininpu">Create Account</button>
+            </form>
+            <div class="switch-link">
+                <p>Already have an account? <a href="#" onclick="switchForm('login')">Log in</a></p>
+            </div>
+        </div>
+        <!-- Login Form -->
+        <div id="loginForm" style="display: none;">
+            <h2>Login</h2>
+            <p>Enter your credentials below</p>
+            <form id="logForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="logEmail">Email</label>
+                    <input type="email" id="logEmail" name="email" required>
+                    <div id="logEmailError" class="error">Please enter a valid email</div>
+                </div>
+                <div class="form-group">
+                    <label for="logPassword">Password</label>
+                    <div style="position:relative;">
+                        <input type="password" id="logPassword" name="password" required>
+                        <span class="toggle-password" onclick="togglePassword('logPassword', this)">
+                            <i class="fa fa-eye"></i>
+                        </span>
+                    </div>
+                    <div id="logPasswordError" class="error">Password cannot be empty</div>
+                </div>
+                <button type="submit" class="logininpu">Login</button>
+            </form>
+            <div class="switch-link">
+                <p>Don't have an account? <a href="#" onclick="switchForm('register')">Register</a></p>
+            </div>
+        </div>
+        <button id="logoutBtn" onclick="handleLogout()" style="display: none;">Logout</button>
+    </div>
+</div>
+<script src="../JS/Login.js"></script>
 </body>
 </html>
