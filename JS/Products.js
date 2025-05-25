@@ -113,8 +113,7 @@ function updateCartSidebar() {
                     <p>our cart is currently displayed in, the checkout will use USD at the most</p>
                 </div>
                 <div class="cart-actions">
-                    <button onclick="checkout()">Check Out</button>
-                    <button onclick="closeCartSidebar()">View Cart</button>
+                    <a href="./Cart.html">View Cart</a>
                 </div>
             `;
         }

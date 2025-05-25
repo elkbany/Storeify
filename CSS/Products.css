@@ -286,6 +286,8 @@ main .banner {
     justify-content: flex-start;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    animation: scale-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+
 }
 
 .product-card:hover {
@@ -643,15 +645,25 @@ footer {
     gap: 10px;
 }
 
-#cart-sidebar .cart-actions button {
+#cart-sidebar .cart-actions a {
     flex: 1;
     padding: 10px;
-    border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
     transition: background-color 0.3s ease;
+    text-align: center;
+    border: 1px solid #b12020;
+    text-decoration: none;
 }
+#cart-sidebar .cart-actions a:visited{
+    color: #b12020;
+}
+#cart-sidebar .cart-actions a:hover {
+    background-color: #b12020;
+    color: #fff;
+}
+
 
 #cart-sidebar .cart-actions button:first-child {
     background: linear-gradient(135deg, #d32f2f, #b71c1c);
@@ -877,4 +889,15 @@ footer {
     .payment-methods img {
         height: 20px;
     }
+}
 
+@keyframes scale-in-top {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
