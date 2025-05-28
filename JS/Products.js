@@ -14,7 +14,7 @@ async function fetchProducts() {
         displayProducts();
         updatePagination();
         updateCartIcon();
-        updateCartSidebar(); // Add this to update the sidebar on load
+        updateCartSidebar();
     } catch (error) {
         console.error('Error fetching products:', error);
         document.getElementById('productsGrid').innerHTML = '<p>Error loading products. Please try again later.</p>';
@@ -138,7 +138,7 @@ function updateQuantity(productId, change) {
 function openCartSidebar() {
     const cartSidebar = document.getElementById('cart-sidebar');
     if (cartSidebar) {
-        updateCartSidebar(); // Ensure content is updated before opening
+        updateCartSidebar();
         cartSidebar.style.right = '0';
     }
 }
@@ -165,6 +165,7 @@ function updatePagination() {
 }
 
 // Filter and sort products
+// Filter and sort products
 function applyFiltersAndSort() {
     let tempProducts = [...products];
 
@@ -175,6 +176,17 @@ function applyFiltersAndSort() {
 
     const maxPrice = parseFloat(document.getElementById('price-range').value);
     tempProducts = tempProducts.filter(product => product.price <= maxPrice);
+
+    // Get search term from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchTerm = urlParams.get('search');
+    if (searchTerm) {
+        const searchLower = searchTerm.toLowerCase();
+        tempProducts = tempProducts.filter(product => 
+            product.title.toLowerCase().includes(searchLower) || 
+            product.category.toLowerCase().includes(searchLower)
+        );
+    }
 
     const sortBy = document.getElementById('sort-by').value;
     if (sortBy === 'title-asc') {
@@ -192,6 +204,49 @@ function applyFiltersAndSort() {
     displayProducts();
     updatePagination();
 }
+
+// Call applyFiltersAndSort on page load to apply URL search
+window.onload = function() {
+    fetchProducts();
+
+    document.getElementById('category-filter').addEventListener('change', applyFiltersAndSort);
+
+    const priceRange = document.getElementById('price-range');
+    const priceValue = document.getElementById('price-value');
+    priceRange.addEventListener('input', () => {
+        priceValue.textContent = priceRange.value;
+        applyFiltersAndSort();
+    });
+
+    document.getElementById('sort-by').addEventListener('change', applyFiltersAndSort);
+
+    document.getElementById('prev-page').addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            displayProducts();
+            updatePagination();
+        }
+    });
+
+    document.getElementById('next-page').addEventListener('click', () => {
+        const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            displayProducts();
+            updatePagination();
+        }
+    });
+
+    // Add event listener to search input (if needed on Products page)
+    document.querySelector('.search-bar input')?.addEventListener('input', applyFiltersAndSort);
+    document.querySelector('.search-bar button')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        applyFiltersAndSort();
+    });
+
+    // Apply filters and sort on page load
+    applyFiltersAndSort();
+};
 
 // Event listeners
 window.onload = function() {
@@ -223,6 +278,15 @@ window.onload = function() {
             displayProducts();
             updatePagination();
         }
+    });
+
+    // Add event listener to search input
+    document.querySelector('.search-bar input').addEventListener('input', applyFiltersAndSort);
+
+    // Add event listener to search button
+    document.querySelector('.search-bar button').addEventListener('click', (e) => {
+        e.preventDefault();
+        applyFiltersAndSort();
     });
 
     // Add event listener to cart icon

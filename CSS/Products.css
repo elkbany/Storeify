@@ -100,7 +100,7 @@ nav a:hover {
 
 /* Banner Section */
 main .banner {
-    background-image: linear-gradient(135deg, #20262ed6, rgb(0 0 0 / 71%)), url('../assets/images/pexels-apasaric-3423860.jpg');
+    background-image: linear-gradient(135deg, #20262ed6, rgb(0 0 0 / 71%)), url('../assets/images/K2_0050.jpg');
     background-position: center;
     height: 300px;
     position: relative;
@@ -283,7 +283,7 @@ main .banner {
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content:flex-end; 
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     animation: scale-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
@@ -511,6 +511,7 @@ footer {
     transition: right 0.3s ease;
     z-index: 1000;
     overflow-y: auto;
+    height: -webkit-fill-available;
 }
 
 #cart-sidebar .cart-header {
@@ -518,6 +519,11 @@ footer {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    position: fixed;
+    width: 374px;
+    background: #f9f9f9;
+    padding: 5px;
+    top: 0;
 }
 
 #cart-sidebar .cart-header h3 {
@@ -527,8 +533,9 @@ footer {
 }
 
 #cart-sidebar .close-cart {
-    font-size: 50px;
+    font-size: 35px;
     cursor: pointer;
+    margin: auto 0;
 }
 
 #cart-sidebar .free-shipping {
@@ -537,6 +544,7 @@ footer {
     border: 1px solid #ddd;
     margin-bottom: 20px;
     text-align: center;
+    margin-top: 91px;
 }
 
 #cart-sidebar .free-shipping p {
