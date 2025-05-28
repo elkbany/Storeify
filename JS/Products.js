@@ -1,9 +1,8 @@
-// Variables for pagination, filtering, sorting, and cart
 let products = [];
 let filteredProducts = [];
 let currentPage = 1;
 const itemsPerPage = 9;
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let cart = [];
 
 // Fetch products from API
 async function fetchProducts() {
@@ -11,13 +10,35 @@ async function fetchProducts() {
         const response = await fetch('https://fakestoreapi.com/products');
         products = await response.json();
         filteredProducts = [...products];
+        loadUserCart();
         displayProducts();
         updatePagination();
         updateCartIcon();
         updateCartSidebar();
+        updateCartSidebar();
     } catch (error) {
         console.error('Error fetching products:', error);
         document.getElementById('productsGrid').innerHTML = '<p>Error loading products. Please try again later.</p>';
+    }
+}
+
+// Load user-specific cart from localStorage
+function loadUserCart() {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (currentUser && currentUser.email) {
+        const cartKey = `cart_${currentUser.email}`;
+        cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+    } else {
+        cart = [];
+    }
+}
+
+// Save user-specific cart to localStorage
+function saveUserCart() {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (currentUser && currentUser.email) {
+        const cartKey = `cart_${currentUser.email}`;
+        localStorage.setItem(cartKey, JSON.stringify(cart));
     }
 }
 
@@ -48,13 +69,20 @@ function displayProducts() {
 
 // Add to cart function
 function addToCart(productId, productTitle, productPrice) {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!currentUser) {
+        alert('Please log in to add items to your cart!');
+        window.location.href = 'Login.html';
+        return;
+    }
+
     const item = cart.find(item => item.id === productId);
     if (item) {
         item.quantity += 1;
     } else {
         cart.push({ id: productId, title: productTitle, price: productPrice, quantity: 1 });
     }
-    localStorage.setItem('cart', JSON.stringify(cart));
+    saveUserCart();
     updateCartSidebar();
     updateCartIcon();
     openCartSidebar();
@@ -110,7 +138,7 @@ function updateCartSidebar() {
                 <div class="cart-total">
                     <p>Subtotal: $${cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2)}</p>
                     <p>Taxes and shipping calculated at checkout</p>
-                    <p>our cart is currently displayed in, the checkout will use USD at the most</p>
+                    <p>Your cart is currently displayed in, the checkout will use USD at the most</p>
                 </div>
                 <div class="cart-actions">
                     <a href="./Cart.html">View Cart</a>
@@ -128,7 +156,7 @@ function updateQuantity(productId, change) {
         if (item.quantity <= 0) {
             cart = cart.filter(item => item.id !== productId);
         }
-        localStorage.setItem('cart', JSON.stringify(cart));
+        saveUserCart();
         updateCartSidebar();
         updateCartIcon();
     }
@@ -138,6 +166,7 @@ function updateQuantity(productId, change) {
 function openCartSidebar() {
     const cartSidebar = document.getElementById('cart-sidebar');
     if (cartSidebar) {
+        updateCartSidebar();
         updateCartSidebar();
         cartSidebar.style.right = '0';
     }
@@ -153,6 +182,12 @@ function closeCartSidebar() {
 
 // Placeholder checkout function
 function checkout() {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!currentUser) {
+        alert('Please log in to proceed to checkout!');
+        window.location.href = 'Login.html';
+        return;
+    }
     alert('Checkout functionality to be implemented!');
 }
 
@@ -289,6 +324,5 @@ window.onload = function() {
         applyFiltersAndSort();
     });
 
-    // Add event listener to cart icon
     document.querySelector('.cart').addEventListener('click', openCartSidebar);
 };

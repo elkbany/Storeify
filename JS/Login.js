@@ -102,7 +102,7 @@ function handleLogin(event) {
 function handleLogout() {
     sessionStorage.removeItem('currentUser');
     alert('Logged out successfully!');
-    window.location.href = 'index.html';
+    window.location.href = 'Login.html';
 }
 
 window.onload = function() {
