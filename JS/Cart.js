@@ -231,6 +231,8 @@ function updateAuthLink() {
             sessionStorage.removeItem('currentUser');
             window.location.href = 'Login.html';
         });
+        userGreeting.textContent = `Welcome, ${currentUser.email.split('@')[0]}`;
+        userGreeting.style.display = 'block';
     } else {
         authLink.textContent = 'Sign Up';
         authLink.href = 'Login.html';
