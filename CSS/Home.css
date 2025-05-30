@@ -40,6 +40,17 @@ nav a:hover {
     color: #d32f2f;
 }
 
+#user-greeting {
+    color: #333 !important;
+    font-weight: 600 !important;
+    margin-right: 15px;
+    font-size: 14px;
+    white-space: nowrap;
+    display: none !important; /* Will be overridden by JavaScript */
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
 .search-bar {
     display: flex;
     align-items: center;

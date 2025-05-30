@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header Test - Storeify</title>
+    <link rel="stylesheet" href="../CSS/Home.css">
+    <link rel="stylesheet" href="../CSS/footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .test-section {
+            padding: 40px;
+            text-align: center;
+        }
+        .test-buttons {
+            margin: 20px 0;
+        }
+        .test-buttons button {
+            margin: 10px;
+            padding: 10px 20px;
+            background: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .test-buttons button:hover {
+            background: #b71c1c;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="logo">Storeify</div>
+    <nav>
+        <a href="Home.html">Home</a>
+        <a href="#">Contact</a>
+        <a href="#">About</a>
+        <a href="products.html">Products</a>
+        <span id="user-greeting" style="display: none; color: #333; font-weight: 600; margin-right: 15px;"></span>
+        <a href="Login.html" id="auth-link" class="authLink">Sign Up</a>
+    </nav>
+    <div class="search-bar">
+        <input type="text" placeholder="What are you looking for?">
+        <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <span class="heart"><i class="fa-regular fa-heart"></i></span>
+        <span class="cart"><i class="fa-solid fa-cart-shopping"></i><span class="cart-count">0</span></span>
+        <span class="profile"><a href="User.html"><i class="fa-solid fa-circle-user"></i></a></span>
+    </div>
+</header>
+
+<main>
+    <div class="test-section">
+        <h1>Dynamic Header Test Page</h1>
+        <p>This page is for testing the dynamic header functionality.</p>
+        
+        <div class="status" id="status">
+            <strong>Current Status:</strong> <span id="current-status">Not logged in</span>
+        </div>
+        
+        <div class="test-buttons">
+            <button onclick="simulateLogin('Ahmed Ali', 'ahmed@example.com')">Login as Ahmed Ali</button>
+            <button onclick="simulateLogin('Sara Mohamed', 'sara@example.com')">Login as Sara Mohamed</button>
+            <button onclick="simulateLogout()">Logout</button>
+            <button onclick="checkStatus()">Check Status</button>
+        </div>
+        
+        <div class="instructions">
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Click "Login as Ahmed Ali" or "Login as Sara Mohamed" to simulate login</li>
+                <li>Watch the header change to show the user greeting and logout button</li>
+                <li>Click "Logout" to simulate logout</li>
+                <li>Watch the header change back to show "Sign Up" link</li>
+                <li>Use "Check Status" to see current authentication state</li>
+            </ol>
+        </div>
+    </div>
+</main>
+
+<script>
+function simulateLogin(name, email) {
+    const testUser = { name: name, email: email, authProvider: 'email' };
+    sessionStorage.setItem('currentUser', JSON.stringify(testUser));
+    initializeHeader();
+    checkStatus();
+}
+
+function simulateLogout() {
+    sessionStorage.removeItem('currentUser');
+    initializeHeader();
+    checkStatus();
+}
+
+function checkStatus() {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    const statusElement = document.getElementById('current-status');
+    
+    if (currentUser) {
+        statusElement.textContent = `Logged in as: ${currentUser.name || currentUser.email}`;
+        statusElement.style.color = 'green';
+    } else {
+        statusElement.textContent = 'Not logged in';
+        statusElement.style.color = 'red';
+    }
+}
+
+// Initialize status on page load
+window.addEventListener('load', checkStatus);
+</script>
+
+<!-- Header Management -->
+<script src="../JS/header.js"></script>
+<!-- Footer Management -->
+<script src="../JS/footer.js"></script>
+</body>
+</html>

@@ -11,7 +11,6 @@ function initializeApp() {
 // Profile initialization
 function initializeProfile() {
     const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    const authLink = document.getElementById('auth-link');
     const profileName = document.getElementById('profile-name');
     const firstNameInput = document.getElementById('first-name');
     const lastNameInput = document.getElementById('last-name');
@@ -23,14 +22,6 @@ function initializeProfile() {
     const profilePhoto = document.getElementById('profilePhoto');
 
     if (currentUser) {
-        authLink.textContent = 'Logout';
-        authLink.href = '#';
-        authLink.onclick = function() {
-            sessionStorage.removeItem('currentUser');
-            alert('Logged out successfully!');
-            window.location.href = 'Login.html';
-        };
-
         const nameParts = currentUser.name ? currentUser.name.split(' ') : ['User', ''];
         profileName.textContent = currentUser.name || currentUser.email;
         firstNameInput.value = nameParts[0] || '';

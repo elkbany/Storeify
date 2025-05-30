@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Cart</title>
         <link rel="stylesheet" href="../CSS/Cart.css">
+        <link rel="stylesheet" href="../CSS/footer.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
             integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
             crossorigin="anonymous"
@@ -12,19 +13,21 @@
     </head>
     <body>
         <header>
-            <div class="logo">Shopify</div>
+            <div class="logo">Storeify</div>
             <nav>
                 <a href="Home.html">Home</a>
                 <a href="#">Contact</a>
                 <a href="#">About</a>
-                <a href="#">Sign Up</a>
+                <a href="products.html">Products</a>
+                <span id="user-greeting" style="display: none; color: #333; font-weight: 600; margin-right: 15px;"></span>
+                <a href="Login.html" id="auth-link" class="authLink">Sign Up</a>
             </nav>
             <div class="search-bar">
                 <input type="text" placeholder="What are you looking for?">
                 <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                 <span class="heart"> <i class="fa-regular fa-heart"></i></span>
-                <span class="cart"><i class="fa-solid fa-cart-shopping"></i></span>
-                <span class="profile"><i class="fa-solid fa-circle-user"></i></span>
+                <span class="cart"><i class="fa-solid fa-cart-shopping"></i><span class="cart-count">0</span></span>
+                <span class="profile"><a href="User.html"><i class="fa-solid fa-circle-user"></i></a></span>
             </div>
         </header>
         <div class="breadcrumb">Home / Cart</div>
@@ -79,7 +82,10 @@
             <button class="checkout-btn">Proceed to checkout</button>
         </div>
     </div>
-    </body>
     <script src="../JS/Cart.js"></script>
+    <!-- Header Management -->
+    <script src="../JS/header.js"></script>
+    <!-- Footer Management -->
+    <script src="../JS/footer.js"></script>
     </body>
 </html>
