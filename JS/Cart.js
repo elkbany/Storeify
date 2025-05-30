@@ -1,22 +1,52 @@
 let cart = [];
 let discount = 0;
+let products = [];
 const validCoupons = {
     'SAVE10': 0.10,
     'SAVE20': 0.20
 };
 
+// Fetch products from API
+async function fetchProducts() {
+    if (products.length === 0) {
+        try {
+            const response = await fetch('https://fakestoreapi.com/products');
+            products = await response.json();
+        } catch (error) {
+            console.error('Error fetching products:', error);
+            showNotification('Failed to load products. Please try again.', 'error');
+        }
+    }
+}
+
 // Load user-specific cart from localStorage
-function loadUserCart() {
+async function loadUserCart() {
+    await fetchProducts();
     try {
         const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
         if (currentUser && currentUser.email) {
             const cartKey = `cart_${currentUser.email}`;
-            cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+            const storedCart = JSON.parse(localStorage.getItem(cartKey)) || [];
+            cart = storedCart
+                .filter(item => item && item.id && Number.isInteger(item.quantity) && item.quantity > 0)
+                .map(item => {
+                    const product = products.find(p => p.id === item.id);
+                    if (product) {
+                        return {
+                            id: item.id,
+                            quantity: item.quantity,
+                            title: product.title,
+                            price: product.price,
+                            image: product.image,
+                            category: product.category
+                        };
+                    }
+                    return null;
+                })
+                .filter(item => item !== null);
         } else {
             cart = [];
         }
-        // Validate cart items
-        cart = cart.filter(item => item && item.id && item.title && item.price);
         updateCartDisplay();
         updateCartIcon();
     } catch (error) {
@@ -32,7 +62,11 @@ function saveUserCart() {
         const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
         if (currentUser && currentUser.email) {
             const cartKey = `cart_${currentUser.email}`;
-            localStorage.setItem(cartKey, JSON.stringify(cart));
+            const cartToSave = cart.map(item => ({
+                id: item.id,
+                quantity: item.quantity
+            }));
+            localStorage.setItem(cartKey, JSON.stringify(cartToSave));
         }
     } catch (error) {
         console.error('Error saving cart:', error);
@@ -52,26 +86,29 @@ function updateCartDisplay() {
             </div>
         `;
     } else {
-        cartItemsContainer.innerHTML = cart.map(item => `
-            <div class="cart-item">
-                <div class="product">
-                    <img src="${item.image}" alt="${item.title}">
-                    <p>${item.title}</p>
-                </div>
-                <div class="price">$${item.price.toFixed(2)}</div>
-                <div class="quantity">
-                    <div class="quantity-control">
-                        <button onclick="updateQuantity(${item.id}, -1)">-</button>
-                        <span>${item.quantity}</span>
-                        <button onclick="updateQuantity(${item.id}, 1)">+</button>
+        cartItemsContainer.innerHTML = cart.map(item => {
+            const product = products.find(p => p.id === item.id);
+            return `
+                <div class="cart-item">
+                    <div class="product">
+                        <img src="${product?.image || ''}" alt="${item.title}">
+                        <p>${item.title}</p>
+                    </div>
+                    <div class="price">$${item.price.toFixed(2)}</div>
+                    <div class="quantity">
+                        <div class="quantity-control">
+                            <button onclick="updateQuantity(${item.id}, -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button onclick="updateQuantity(${item.id}, 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="subtotal">$${(item.price * item.quantity).toFixed(2)}</div>
+                    <div class="action">
+                        <span class="delete-btn" onclick="deleteItem(${item.id})"><i class="fa-solid fa-trash"></i></span>
                     </div>
                 </div>
-                <div class="subtotal">$${(item.price * item.quantity).toFixed(2)}</div>
-                <div class="action">
-                    <span class="delete-btn" onclick="deleteItem(${item.id})"><i class="fa-solid fa-trash"></i></span>
-                </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     }
 
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -194,8 +231,6 @@ function updateAuthLink() {
             sessionStorage.removeItem('currentUser');
             window.location.href = 'Login.html';
         });
-        userGreeting.textContent = `Welcome, ${currentUser.email.split('@')[0]}`;
-        userGreeting.style.display = 'block';
     } else {
         authLink.textContent = 'Sign Up';
         authLink.href = 'Login.html';
