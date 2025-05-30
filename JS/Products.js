@@ -24,21 +24,34 @@ async function fetchProducts() {
 
 // Load user-specific cart from localStorage
 function loadUserCart() {
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    if (currentUser && currentUser.email) {
-        const cartKey = `cart_${currentUser.email}`;
-        cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-    } else {
+    try {
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+        if (currentUser && currentUser.email) {
+            const cartKey = `cart_${currentUser.email}`;
+            cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+        } else {
+            cart = [];
+        }
+
+        // Validate cart items
+        cart = cart.filter(item => item && item.id && item.title && item.price);
+
+    } catch (error) {
+        console.error('Error loading cart:', error);
         cart = [];
     }
 }
 
 // Save user-specific cart to localStorage
 function saveUserCart() {
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    if (currentUser && currentUser.email) {
-        const cartKey = `cart_${currentUser.email}`;
-        localStorage.setItem(cartKey, JSON.stringify(cart));
+    try {
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+        if (currentUser && currentUser.email) {
+            const cartKey = `cart_${currentUser.email}`;
+            localStorage.setItem(cartKey, JSON.stringify(cart));
+        }
+    } catch (error) {
+        console.error('Error saving cart:', error);
     }
 }
 
@@ -57,35 +70,131 @@ function displayProducts() {
     paginatedProducts.forEach(product => {
         const productCard = document.createElement('div');
         productCard.className = 'product-card';
-        productCard.innerHTML = `
-            <img src="${product.image}" alt="${product.title}">
-            <a href="../HTML/OneProduct.html?id=${product.id}" class="product-title">${product.title}</a>
-            <p class="price">$${product.price.toFixed(2)}</p>
-            <button onclick="addToCart(${product.id}, '${product.title}', ${product.price})">Add to Cart</button>
-        `;
+
+        // Create elements separately to avoid string escaping issues
+        const img = document.createElement('img');
+        img.src = product.image;
+        img.alt = product.title;
+
+        const titleLink = document.createElement('a');
+        titleLink.href = `../HTML/OneProduct.html?id=${product.id}`;
+        titleLink.className = 'product-title';
+        titleLink.textContent = product.title;
+
+        const price = document.createElement('p');
+        price.className = 'price';
+        price.textContent = `$${product.price.toFixed(2)}`;
+
+        const addButton = document.createElement('button');
+        addButton.className = 'add-to-cart-btn';
+        addButton.textContent = 'Add to Cart';
+        addButton.onclick = (e) => {
+            e.preventDefault();
+            handleAddToCart(addButton, product.id, product.title, product.price);
+        };
+
+        productCard.appendChild(img);
+        productCard.appendChild(titleLink);
+        productCard.appendChild(price);
+        productCard.appendChild(addButton);
+
         productsGrid.appendChild(productCard);
     });
 }
 
+// Handle add to cart with button state management
+function handleAddToCart(button, productId, productTitle, productPrice) {
+    // Disable button and show loading state
+    button.disabled = true;
+    button.classList.add('loading');
+    const originalText = button.textContent;
+    button.textContent = 'Adding...';
+
+    // Add to cart with a small delay to show loading state
+    setTimeout(() => {
+        addToCart(productId, productTitle, productPrice);
+
+        // Reset button state
+        button.disabled = false;
+        button.classList.remove('loading');
+        button.textContent = originalText;
+    }, 300);
+}
+
 // Add to cart function
 function addToCart(productId, productTitle, productPrice) {
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    if (!currentUser) {
-        alert('Please log in to add items to your cart!');
-        window.location.href = 'Login.html';
-        return;
-    }
+    try {
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+        if (!currentUser) {
+            alert('Please log in to add items to your cart!');
+            window.location.href = 'Login.html';
+            return;
+        }
 
-    const item = cart.find(item => item.id === productId);
-    if (item) {
-        item.quantity += 1;
-    } else {
-        cart.push({ id: productId, title: productTitle, price: productPrice, quantity: 1 });
+        // Find the full product details
+        const fullProduct = products.find(p => p.id === productId);
+        if (!fullProduct) {
+            alert('Product not found!');
+            return;
+        }
+
+        const item = cart.find(item => item.id === productId);
+        if (item) {
+            item.quantity += 1;
+        } else {
+            cart.push({
+                id: productId,
+                title: productTitle,
+                price: productPrice,
+                quantity: 1,
+                image: fullProduct.image,
+                category: fullProduct.category
+            });
+        }
+
+        saveUserCart();
+        updateCartSidebar();
+        updateCartIcon();
+
+        // Show success feedback
+        showAddToCartFeedback(productTitle);
+
+        // Open cart sidebar to show the added item
+        openCartSidebar();
+
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+        alert('Failed to add item to cart. Please try again.');
     }
-    saveUserCart();
-    updateCartSidebar();
-    updateCartIcon();
-    openCartSidebar();
+}
+
+// Show feedback when item is added to cart
+function showAddToCartFeedback(productTitle) {
+    // Create a temporary notification
+    const notification = document.createElement('div');
+    notification.className = 'cart-notification';
+    notification.innerHTML = `
+        <i class="fa-solid fa-check-circle"></i>
+        <span>${productTitle} added to cart!</span>
+    `;
+
+    document.body.appendChild(notification);
+
+    // Add show class for animation
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+        notification.classList.remove('show');
+        notification.classList.add('hide');
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
 }
 
 // Update cart icon with item count

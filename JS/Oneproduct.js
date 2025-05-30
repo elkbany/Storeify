@@ -121,17 +121,78 @@ window.updateQuantity = function(change) {
 
 // Add to cart
 window.addToCart = function(id, title, price) {
-    var cart = JSON.parse(localStorage.getItem('cart')) || [];
-    var item = cart.find(function(item) {
-        return item.id === id && item.color === selectedColor && item.size === selectedSize;
-    });
-    if (item) {
-        item.quantity += quantity;
-    } else {
-        cart.push({ id: id, title: title, price: price, quantity: quantity, color: selectedColor, size: selectedSize });
+    try {
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+        if (!currentUser) {
+            alert('Please log in to add items to your cart!');
+            window.location.href = 'Login.html';
+            return;
+        }
+
+        const cartKey = `cart_${currentUser.email}`;
+        var cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+        var item = cart.find(function(item) {
+            return item.id === id && item.color === selectedColor && item.size === selectedSize;
+        });
+
+        if (item) {
+            item.quantity += quantity;
+        } else {
+            cart.push({
+                id: id,
+                title: title,
+                price: price,
+                quantity: quantity,
+                color: selectedColor,
+                size: selectedSize,
+                image: currentProduct ? currentProduct.image : ''
+            });
+        }
+
+        localStorage.setItem(cartKey, JSON.stringify(cart));
+
+        // Show success feedback
+        showAddToCartFeedback(title);
+
+        // Update cart count in header if available
+        if (window.refreshCartCount) {
+            window.refreshCartCount();
+        }
+
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+        alert('Failed to add item to cart. Please try again.');
     }
-    localStorage.setItem('cart', JSON.stringify(cart));
-    alert('Added to cart!');
+}
+
+// Show feedback when item is added to cart
+function showAddToCartFeedback(productTitle) {
+    // Create a temporary notification
+    const notification = document.createElement('div');
+    notification.className = 'cart-notification';
+    notification.innerHTML = `
+        <i class="fa-solid fa-check-circle"></i>
+        <span>${productTitle} added to cart!</span>
+    `;
+
+    document.body.appendChild(notification);
+
+    // Add show class for animation
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+        notification.classList.remove('show');
+        notification.classList.add('hide');
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
 }
 
 // Buy now
