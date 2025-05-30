@@ -254,8 +254,9 @@ nav a {
 }
 .related-products-grid {
     display: flex;
-    gap: 70px;
     flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
 }
 .related-product-card {
     /*flex: 1;*/

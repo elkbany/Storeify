@@ -152,7 +152,7 @@ nav a:hover {
 .cart-header .price { flex: 1; text-align: center; }
 .cart-header .quantity { flex: 1; text-align: center; }
 .cart-header .subtotal { flex: 1; text-align: center; }
-.cart-header .action { flex: 0.5; text-align: center; }
+.cart-header .action { flex: 0.1; text-align: center; }
 
 /* Each item */
 .cart-item {
@@ -553,4 +553,5 @@ SF
         font-size: 14px;
         padding: 10px;
     }
+}
 }

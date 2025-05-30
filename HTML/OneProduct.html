@@ -6,22 +6,25 @@
     <title>Storify-OneProduct</title>
     <link rel="stylesheet" href="../CSS/OneProduct.css">
     <link rel="stylesheet" href="../CSS/Products.css">
-    <link rel="stylesheet" href="../CSS/header.css">
     <link rel="stylesheet" href="../CSS/footer.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
           integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 <body>
+    <div class="top-bar">
+        <div class="top-bar-content">
+                <p>Free shipping on orders over $50</p>
+        </div>
+    </div>
     <header>
         <div class="logo">Storeify</div>
-
         <nav>
             <a href="Home.html">Home</a>
             <a href="#">Contact</a>
             <a href="#">About</a>
             <a href="products.html">Products</a>
-            <span id="user-greeting" style="display: none; color: #333; font-weight: 600; margin-right: 15px;"></span>
             <a href="Login.html" id="auth-link" class="authLink">Sign Up</a>
         </nav>
         <div class="search-bar">
@@ -35,6 +38,12 @@
 
     </header>
     <main>
+        <div class="banner">
+            <div class="banner-text">
+                <h1>Product Details</h1>
+                <p><a href="Home.html">HOME</a> / PRODUCTDETAILS</p>
+            </div>
+        </div>
         <div class="product-container" id="productContainer">
             <!-- Product details will be dynamically loaded here -->
         </div>
