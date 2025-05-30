@@ -15,12 +15,10 @@ function initializeFooter() {
             <div class="footer-section">
                 <h3>SHOP</h3>
                 <ul>
-                    <li><a href="products.html">Energy Drinks</a></li>
-                    <li><a href="products.html">Protein</a></li>
-                    <li><a href="products.html">Pre-Workout</a></li>
-                    <li><a href="products.html">Plant Therapy</a></li>
-                    <li><a href="products.html">Creatine</a></li>
-                    <li><a href="products.html">Weight Loss</a></li>
+                    <li><a href="products.html">Electornics</a></li>
+                    <li><a href="products.html">Jewelry</a></li>
+                    <li><a href="products.html">Men's Clothing</a></li>
+                    <li><a href="products.html">Women's Clothing</a></li>
                 </ul>
             </div>
             <div class="footer-section">

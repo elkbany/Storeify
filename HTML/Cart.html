@@ -5,18 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cart - Storeify</title>
     <link rel="stylesheet" href="../CSS/Cart.css">
-    <link rel="stylesheet" href="../CSS/header.css">
-    <link rel="stylesheet" href="../CSS/footer.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../CSS/header.css">
+    <link rel="stylesheet" href="../CSS/footer.css">    
+    <link rel="stylesheet" href="../CSS/Products.css">
+    
 </head>
 <body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <p>Free shipping on orders over $50</p>
+    </div>
+
     <!-- Header -->
     <header>
         <div class="logo">Storeify</div>
         <nav>
             <a href="Home.html">Home</a>
-            <a href="#">Contact</a>
-            <a href="#">About</a>
+            <a href="Contact.html">Contact</a>
+            <a href="About.html">About</a>
             <a href="products.html">Products</a>
             <span id="user-greeting" style="display: none; color: #333; font-weight: 600; margin-right: 15px;"></span>
             <a href="Login.html" id="auth-link" class="authLink">Sign Up</a>
@@ -29,7 +36,6 @@
             <span class="profile"><a href="User.html"><i class="fa-solid fa-circle-user"></i></a></span>
 
         </div>
-
     </header>
 
     <!-- Breadcrumb -->
@@ -66,47 +72,7 @@
             <button class="checkout-btn">Proceed to checkout</button>
         </div>
     </div>
-
-<!--    &lt;!&ndash; Footer &ndash;&gt;-->
-<!--    <footer>-->
-<!--        <div class="footer-container">-->
-<!--            <div class="footer-section">-->
-<!--                <h3>Storeify</h3>-->
-<!--                <p>Best online store for all your needs.</p>-->
-<!--            </div>-->
-<!--            <div class="footer-section">-->
-<!--                <h3>Quick Links</h3>-->
-<!--                <ul>-->
-<!--                    <li>Home</li>-->
-<!--                    <li>Products</li>-->
-<!--                    <li>Contact</li>-->
-<!--                    <li>About</li>-->
-<!--                </ul>-->
-<!--            </div>-->
-<!--            <div class="footer-section">-->
-<!--                <h3>Contact Us</h3>-->
-<!--                <ul>-->
-<!--                    <li>Email: support@storeify.com</li>-->
-<!--                    <li>Phone: (123) 456-7890</li>-->
-<!--                    <li>Address: 123 Store St, City</li>-->
-<!--                </ul>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="footer-bottom">-->
-<!--            <p>&copy; 2025 Storeify. All rights reserved.</p>-->
-<!--            <div class="social-links">-->
-<!--                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>-->
-<!--                <a href="#"><i class="fa-brands fa-twitter"></i></a>-->
-<!--                <a href="#"><i class="fa-brands fa-instagram"></i></a>-->
-<!--            </div>-->
-<!--            <div class="payment-methods">-->
-<!--                <img src="../assets/images/visa.png" alt="Visa">-->
-<!--                <img src="../assets/images/mastercard.png" alt="Mastercard">-->
-<!--                <img src="../assets/images/paypal.png" alt="Paypal">-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </footer>-->
-
+    
     <script src="../JS/Cart.js"></script>
     <!-- Header Management -->
     <script src="../JS/header.js"></script>
