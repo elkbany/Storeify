@@ -1,10 +1,11 @@
+/* General */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    line-height: 1.6;
     background-color: #f9f9f9;
 }
+
 header {
     display: flex;
     justify-content: space-between;
@@ -12,34 +13,35 @@ header {
     padding: 20px 40px;
     background-color: #fff;
     border-bottom: 1px solid #ddd;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
 }
+
 .logo {
     font-size: 24px;
     font-weight: bold;
     color: #d32f2f;
 }
+
 nav a {
     margin: 0 15px;
     text-decoration: none;
     color: #000;
     font-weight: 500;
 }
-.search-bar{
+
+.search-bar {
     display: flex;
     align-items: center;
-    gap: 10px;/* control the spaces between elements */
+    gap: 10px;
 }
+
 .search-bar input {
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
     width: 200px;
 }
-.search-bar button
-{
+
+.search-bar button {
     padding: 8px 12px;
     background-color: #d32f2f;
     color: white;
@@ -47,58 +49,54 @@ nav a {
     border-radius: 4px;
     cursor: pointer;
 }
-.search-bar .heart, .search-bar .cart,.search-bar .profile{
-    margin-left: 10px;
+
+.search-bar span {
     font-size: 18px;
     color: #888;
     cursor: pointer;
 }
 
-/* ************************ */
+/* Breadcrumb */
 .breadcrumb {
     color: #888;
     margin: 30px 60px 10px;
     font-size: 14px;
 }
 
+/* Cart Container */
 .cart-container {
     background: #fff;
-    padding: 20px 40px;
-    margin: 0 60px 40px;
+    padding: 30px 40px;
+    margin: 20px 60px;
     border-radius: 8px;
     border: 1px solid #eee;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
+/* Header row */
 .cart-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    margin-bottom: 10px;
-    border: 1px  #ddd;
-    border-radius: 6px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     font-weight: bold;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
 }
 
+/* Each item */
 .cart-item {
-    display: grid;
-    grid-template-columns: 3fr 1fr 1fr 1fr;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding: 15px 0px;
+    padding: 15px 0;
     border-bottom: 1px solid #eee;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    margin-top: 15px;
 }
 
 .cart-item .product {
     display: flex;
     align-items: center;
     gap: 12px;
+    flex: 3;
 }
 
 .cart-item img {
@@ -108,15 +106,22 @@ nav a {
     border-radius: 6px;
 }
 
+.cart-item .price,
+.cart-item .quantity,
+.cart-item .subtotal {
+    flex: 1;
+    text-align: center;
+}
+
 .quantity input {
     width: 60px;
     padding: 5px;
-    
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
+/* Cart actions */
 .cart-actions {
     display: flex;
     justify-content: space-between;
@@ -130,6 +135,7 @@ nav a {
     border: 1px solid #000;
     cursor: pointer;
     border-radius: 4px;
+    transition: 0.3s;
 }
 
 .cart-actions button:hover {
@@ -137,40 +143,58 @@ nav a {
     color: #fff;
 }
 
+/* Footer with coupon and totals */
+.footer {
+    display: flex;
+    justify-content: space-between;
+    margin: 40px 60px;
+    flex-wrap: wrap;
+    gap: 20px; /* Add this line */
+}
+
+
 .coupon {
     display: flex;
     gap: 10px;
-    margin-left: 100px;
-    }
-.coupon input {
-    padding: 10px;
-    width: 200px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
 }
+
+.coupon input,
 .coupon button {
-    background-color: #e74c3c;
+    height: 45px;
+}
+
+
+
+.coupon button {
+    background-color: #d32f2f;
     color: white;
+    text-align: center;
     border: none;
-    padding: 10px 20px;
+    padding: 25px;
     border-radius: 3px;
     cursor: pointer;
-}
-.cart-total {
+    transition: background-color 0.3s ease;
     
+}
+
+.coupon button:hover {
+    background-color: #b71c1c;
+}
+
+
+.cart-total {
     border: 1px solid #ccc;
     padding: 20px;
-    width: 250px;
+    width: 280px;
     border-radius: 5px;
-    margin-right: 100px;
-    margin-bottom: 50px;
-    float: right;
+    background-color: #fff;
 }
 
 .cart-total h3 {
     margin-top: 0;
     margin-bottom: 20px;
 }
+
 .cart-total p {
     display: flex;
     justify-content: space-between;
@@ -181,9 +205,15 @@ nav a {
     background-color: #e74c3c;
     color: white;
     border: none;
-    padding: 10px;
+    padding: 12px;
     width: 100%;
     border-radius: 3px;
     cursor: pointer;
     margin-top: 20px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.checkout-btn:hover {
+    background-color: #c0392b;
 }
