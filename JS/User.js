@@ -235,5 +235,19 @@ function updateQuantity(itemId, change) {
     }
 }
 
+// Add event listener for logout
+document.addEventListener('DOMContentLoaded', function() {
+    const logoutLink = document.getElementById('logout-link');
+    if (logoutLink) {
+        logoutLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Clear user session
+            sessionStorage.removeItem('currentUser');
+            // Redirect to login page
+            window.location.href = 'Login.html';
+        });
+    }
+});
+
 // Initialize the application when the window loads
 window.onload = initializeApp;
