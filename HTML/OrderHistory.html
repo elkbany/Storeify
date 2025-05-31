@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History - Storeify</title>
+    <link rel="stylesheet" href="../CSS/OrderHistory.css">
+    <link rel="stylesheet" href="../CSS/footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../CSS/Products.css">
+</head>
+<body>
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <p>Free shipping on orders over $50</p>
+        </div>
+    </div>
+
+    <header>
+        <div class="logo">Storeify</div>
+        <nav>
+            <a href="Home.html">Home</a>
+            <a href="Contact.html">Contact</a>
+            <a href="About.html">About</a>
+            <a href="products.html">Products</a>
+            <span id="user-greeting" style="display: none;"></span>
+            <a href="Login.html" id="auth-link" class="authLink">Sign Up</a>
+        </nav>
+        <div class="search-bar">
+            <input type="text" placeholder="What are you looking for?">
+            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <span class="heart"><i class="fa-regular fa-heart"></i></span>
+            <span class="cart"><i class="fa-solid fa-cart-shopping"></i><span class="cart-count">0</span></span>
+            <div class="profile-dropdown">
+                <span class="profile"><i class="fa-solid fa-circle-user"></i></span>
+                <div class="dropdown-content">
+                    <a href="User.html"><i class="fas fa-user"></i> Profile</a>
+                    <a href="OrderHistory.html"><i class="fas fa-box"></i> Orders</a>
+                    <a href="#"><i class="fas fa-heart"></i> Wishlist</a>
+                    <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" id="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Order History</h1>
+            <div class="order-filters">
+                <div class="search-orders">
+                    <input type="text" id="orderSearch" placeholder="Search orders...">
+                </div>
+                <div class="filter-options">
+                    <select id="statusFilter">
+                        <option value="all">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                    </select>
+                    <select id="dateFilter">
+                        <option value="all">All Time</option>
+                        <option value="last30">Last 30 Days</option>
+                        <option value="last60">Last 60 Days</option>
+                        <option value="last90">Last 90 Days</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="ordersList" class="orders-list">
+                <!-- Orders will be populated here by JavaScript -->
+            </div>
+
+            <div id="noOrders" class="no-orders" style="display: none;">
+                <i class="fas fa-box-open"></i>
+                <h2>No Orders Found</h2>
+                <p>You haven't placed any orders yet.</p>
+                <a href="products.html" class="shop-now-btn">Shop Now</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <span class="close-cart">&times;</span>
+        </div>
+        <div class="free-shipping">
+            <p>Free shipping for orders over <strong>$50</strong></p>
+            <div class="progress-bar">
+                <div id="shipping-progress" style="width: 0%"></div>
+            </div>
+            <p>Add <strong id="free-shipping-remaining">$50.00</strong> more for free shipping</p>
+        </div>
+        <div id="cart-items">
+            <!-- Cart items will be dynamically added here -->
+        </div>
+        <div id="cart-total">
+            <p>Subtotal: <strong id="cart-subtotal">$0.00</strong></p>
+        </div>
+        <div class="cart-actions">
+            <a href="Checkout.html">Checkout</a>
+        </div>
+    </div>
+
+    <script src="../JS/OrderHistory.js"></script>
+    <script src="../JS/header.js"></script>
+    <script src="../JS/footer.js"></script>
+</body>
+</html> 
