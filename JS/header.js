@@ -107,3 +107,53 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+let allProducts = [];
+
+async function fetchAllProducts() {
+    if (allProducts.length) return allProducts;
+    const res = await fetch('https://fakestoreapi.com/products');
+    allProducts = await res.json();
+    return allProducts;
+}
+
+const searchInput = document.getElementById('searchInput');
+const suggestionsBox = document.getElementById('search-suggestions');
+
+searchInput.addEventListener('input', async function() {
+    const query = this.value.trim().toLowerCase();
+    if (!query) {
+        suggestionsBox.style.display = 'none';
+        suggestionsBox.innerHTML = '';
+        return;
+    }
+    const products = await fetchAllProducts();
+    const matches = products.filter(p => p.title.toLowerCase().includes(query)).slice(0, 6);
+    if (matches.length === 0) {
+        suggestionsBox.style.display = 'none';
+        suggestionsBox.innerHTML = '';
+        return;
+    }
+    suggestionsBox.innerHTML = matches.map(p => `
+        <div class="suggestion-item" data-id="${p.id}">
+            <img src="${p.image}" alt="${p.title}">
+            <span class="product-name">${p.title}</span>
+        </div>
+    `).join('');
+    suggestionsBox.style.display = 'block';
+});
+
+// Handle click on suggestion
+suggestionsBox.addEventListener('click', function(e) {
+    let item = e.target.closest('.suggestion-item');
+    if (item) {
+        const id = item.getAttribute('data-id');
+        window.location.href = `OneProduct.html?id=${id}`;
+    }
+});
+
+// Hide suggestions when clicking outside
+document.addEventListener('click', function(e) {
+    if (!searchInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+        suggestionsBox.style.display = 'none';
+    }
+});

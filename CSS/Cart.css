@@ -633,3 +633,43 @@ SF
     color: #888;
     text-decoration: none;
 }
+.search-bar{
+    position: relative;
+}
+.search-suggestions {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    z-index: 1001;
+    max-height: 300px;
+    overflow-y: auto;
+    display: none;
+}
+.search-suggestions .suggestion-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.search-suggestions .suggestion-item:hover {
+    background: #f5f5f5;
+}
+.search-suggestions img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    margin-right: 10px;
+    border-radius: 4px;
+    border: 1px solid #eee;
+}
+.search-suggestions .product-name {
+    font-size: 15px;
+    color: #333;
+    font-weight: 500;
+}

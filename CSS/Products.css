@@ -66,9 +66,9 @@ nav a:hover {
 .search-bar {
     display: flex;
     align-items: center;
-    gap: 15px;
+    position: relative;
+    gap: 10px;
 }
-
 .search-bar input {
     padding: 10px;
     border: 1px solid #ddd;
