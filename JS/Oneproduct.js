@@ -268,18 +268,18 @@ window.buyNow = function() {
     window.location.href = 'Checkout.html';
 };
 
-// Add to wishlist
-window.addToWishlist = function(id) {
-    const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-    if (!wishlist.includes(id)) {
-        wishlist.push(id);
-        localStorage.setItem('wishlist', JSON.stringify(wishlist));
-        showNotification('Added to wishlist!', 'success');
-    } else {
-        showNotification('Already in wishlist!', 'warning');
-    }
-};
-
+// // Add to wishlist
+// window.addToWishlist = function(id) {
+//     const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+//     if (!wishlist.includes(id)) {
+//         wishlist.push(id);
+//         localStorage.setItem('wishlist', JSON.stringify(wishlist));
+//         showNotification('Added to wishlist!', 'success');
+//     } else {
+//         showNotification('Already in wishlist!', 'warning');
+//     }
+// };
+//
 // Fetch related products
 async function fetchRelatedProducts(category, currentId) {
     try {
@@ -343,3 +343,22 @@ function updateAuthLink() {
 document.addEventListener('DOMContentLoaded', () => {
     updateAuthLink();
 });
+function addToWishlist(productId) {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (currentUser && currentUser.email) {
+        const wishlistKey = `wishlist_${currentUser.email}`;
+        let wishlist = JSON.parse(localStorage.getItem(wishlistKey)) || [];
+        if (!wishlist.includes(productId)) {
+            wishlist.push(productId);
+            localStorage.setItem(wishlistKey, JSON.stringify(wishlist));
+            showNotification('Item added to wishlist!', 'success');
+        } else {
+            showNotification('Item already in wishlist!', 'error');
+        }
+    } else {
+        showNotification('Please log in to add to wishlist!', 'error');
+        setTimeout(() => {
+            window.location.href = 'Login.html';
+        }, 1000);
+    }
+}

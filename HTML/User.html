@@ -18,34 +18,22 @@
                 <p>Free shipping on orders over $50</p>
         </div>
     </div>
-<header>
-    <div class="logo">Storeify</div>
-    <nav>
-        <a href="Home.html">Home</a>
-        <a href="#">Contact</a>
-        <a href="#">About</a>
-        <a href="products.html">Products</a>
-        <span id="user-greeting" style="display: none; color: #333; font-weight: 600; margin-right: 15px;"></span>
-        <a href="Login.html" id="auth-link" class="authLink">Sign Up</a>
-    </nav>
-    <div class="search-bar">
-        <input type="text" placeholder="What are you looking for?">
-        <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-        <span class="heart"><i class="fa-regular fa-heart"></i></span>
-        <span class="cart"><i class="fa-solid fa-cart-shopping"></i><span class="cart-count">0</span></span>
-        <div class="profile-dropdown">
-            <span class="profile"><i class="fa-solid fa-circle-user"></i></span>
-            <div class="dropdown-content">
-                <a href="User.html"><i class="fas fa-user"></i> Profile</a>
-                <a href="OrderHistory.html"><i class="fas fa-box"></i> Orders</a>
-                <a href="#"><i class="fas fa-heart"></i> Wishlist</a>
-                <a href="#"><i class="fas fa-cog"></i> Settings</a>
-                <div class="dropdown-divider"></div>
-                <a href="#" id="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
-            </div>
+    <header>
+        <div class="logo">Storeify</div>
+        <nav>
+            <a href="Home.html">Home</a>
+            <a href="#">Contact</a>
+            <a href="#">About</a>
+            <a href="./products.html">Products</a>
+        </nav>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="What are you looking for?">
+            <button type="submit" id="searchButton"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <a href="Wishlist.html" class="heart"><i class="fa-regular fa-heart"></i></a>
+            <a href="Cart.html" class="cart"><i class="fa-solid fa-cart-shopping"></i><span class="cart-count">0</span></a>
+            <div id="profile-area"></div>
         </div>
-    </div>
-</header>
+    </header>
 <main>
     <section class="profile-section">
         <div class="container">

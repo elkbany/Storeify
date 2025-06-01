@@ -82,7 +82,6 @@ function updateCartDisplay() {
         cartItemsContainer.innerHTML = `
             <div class="empty-cart">
                 <p>Your cart is empty</p>
-                <a href="products.html" class="return-btn">Continue Shopping</a>
             </div>
         `;
     } else {

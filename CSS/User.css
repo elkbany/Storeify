@@ -761,3 +761,18 @@ footer {
 #logout-link:hover {
     background-color: #fff5f5;
 }
+.search-bar .heart,
+.search-bar .cart,
+.search-bar .profile {
+    font-size: 20px;
+    color: #888;
+    cursor: pointer;
+    position: relative;
+    margin-left: 10px;
+}
+
+.search-bar .cart a,
+.search-bar .profile a {
+    color: #888;
+    text-decoration: none;
+}

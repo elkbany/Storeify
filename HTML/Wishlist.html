@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist - Storeify</title>
+    <link rel="stylesheet" href="../CSS/Wishlist.css">
+    <link rel="stylesheet" href="../CSS/footer.css">
+<!--    <link rel="stylesheet" href="../CSS/User.css">-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../CSS/Products.css">
+</head>
+<body>
+<div class="top-bar">
+    <div class="top-bar-content">
+        <p>Free shipping on orders over $50</p>
+    </div>
+</div>
+<header>
+    <div class="logo">Storeify</div>
+    <nav>
+        <a href="Home.html">Home</a>
+        <a href="#">Contact</a>
+        <a href="#">About</a>
+        <a href="./products.html">Products</a>
+    </nav>
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="What are you looking for?">
+        <button type="submit" id="searchButton"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <a href="Wishlist.html" class="heart"><i class="fa-regular fa-heart"></i></a>
+        <a href="Cart.html" class="cart"><i class="fa-solid fa-cart-shopping"></i><span class="cart-count">0</span></a>
+        <div id="profile-area"></div>
+    </div>
+</header>
+
+
+<div class="breadcrumb">Home / Wishlist</div>
+
+<div class="wishlist-container">
+    <div class="wishlist-header">
+        <div class="product">Product</div>
+        <div class="price">Price</div>
+        <div class="action">Action</div>
+    </div>
+    <div id="wishlist-items"></div>
+</div>
+
+<div class="footer">
+    <div class="wishlist-actions">
+        <a href="Products.html" class="return-btn">Continue Shopping</a>
+    </div>
+</div>
+
+<script src="../JS/Wishlist.js"></script>
+<!-- Header Management -->
+<script src="../JS/header.js"></script>
+<!-- Footer Management -->
+<script src="../JS/footer.js"></script>
+</body>
+</html>
