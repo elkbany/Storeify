@@ -13,7 +13,7 @@ async function fetchProducts() {
             products = await response.json();
         } catch (error) {
             console.error('Error fetching products:', error);
-            alert('Failed to load products. Please try again.');
+            showNotification('Failed to load products. Please try again.', 'error');
         }
     }
 }
@@ -22,7 +22,7 @@ async function fetchProducts() {
 document.addEventListener('DOMContentLoaded', async function() {
     await fetchProducts();
     loadCartItems();
-    loadSavedCoupon(); // Load any saved coupon
+    loadSavedCoupon();
     setupEventListeners();
     loadSavedFormData();
 });
@@ -69,8 +69,7 @@ async function loadCartItems() {
         if (currentUser && currentUser.email) {
             const cartKey = `cart_${currentUser.email}`;
             const storedCart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            
-            // Map stored cart items to full product details
+
             const cart = storedCart
                 .filter(item => item && item.id && Number.isInteger(item.quantity) && item.quantity > 0)
                 .map(item => {
@@ -92,7 +91,10 @@ async function loadCartItems() {
             displayCartItems(cart);
             updateTotals(cart);
         } else {
-            window.location.href = 'Login.html';
+            showNotification('Please log in to view your cart!', 'error');
+            setTimeout(() => {
+                window.location.href = 'Login.html';
+            }, 1000);
         }
     } catch (error) {
         console.error('Error loading cart:', error);
@@ -112,7 +114,7 @@ function displayCartItems(cart) {
 
     cart.forEach(item => {
         if (!item || !item.title || !item.price) return;
-        
+
         const productElement = document.createElement('div');
         productElement.className = 'product-item';
         productElement.innerHTML = `
@@ -149,7 +151,7 @@ function updateTotals(cart) {
         const totalElement = document.getElementById('total-amount');
 
         subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
-        totalElement.textContent = `$${discountedTotal.toFixed(2)}`; // Apply discount to total
+        totalElement.textContent = `$${discountedTotal.toFixed(2)}`;
     } catch (error) {
         console.error('Error updating totals:', error);
         document.getElementById('subtotal-amount').textContent = '$0.00';
@@ -189,8 +191,7 @@ function saveOrder(orderData) {
         if (currentUser && currentUser.email) {
             const ordersKey = `orders_${currentUser.email}`;
             const existingOrders = JSON.parse(localStorage.getItem(ordersKey)) || [];
-            
-            // Add order date and unique ID
+
             const newOrder = {
                 ...orderData,
                 orderId: `ORD-${Date.now()}`,
@@ -208,6 +209,67 @@ function saveOrder(orderData) {
     }
 }
 
+// Load saved form data for the current user
+function loadSavedFormData() {
+    try {
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+        if (!currentUser || !currentUser.email) return;
+
+        const formData = {};
+        let useUserData = false;
+
+        // Check current user's profile data
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const user = users.find(u => u.email === currentUser.email);
+
+        if (user) {
+            // Determine if user has edited their profile
+            const hasEditedProfile = (
+                (user.name && user.name.trim() && user.name.trim() !== user.email) || // Name is set and not just email
+                (user.phone && user.phone.trim()) || // Phone is set
+                (user.company && user.company.trim()) // Company is set
+            );
+
+            if (hasEditedProfile) {
+                useUserData = true;
+                const nameParts = user.name ? user.name.trim().split(' ') : [];
+                formData.firstName = nameParts[0] || '';
+                formData.email = user.email || '';
+                formData.phone = user.phone || '';
+                formData.companyName = user.company || '';
+            }
+        }
+
+        // Load address data from user-specific checkout data
+        const checkoutKey = `checkoutFormData_${currentUser.email}`;
+        const savedCheckoutData = localStorage.getItem(checkoutKey);
+        if (savedCheckoutData) {
+            const checkoutData = JSON.parse(savedCheckoutData);
+            // Always use checkout data for address fields
+            formData.streetAddress = checkoutData.streetAddress || '';
+            formData.apartment = checkoutData.apartment || '';
+            formData.townCity = checkoutData.townCity || '';
+            // Use checkout data for other fields only if user data is not used
+            if (!useUserData) {
+                formData.firstName = checkoutData.firstName || '';
+                formData.companyName = checkoutData.companyName || '';
+                formData.phone = checkoutData.phone || '';
+                formData.email = checkoutData.email || '';
+            }
+        }
+
+        // Populate form fields
+        Object.keys(formData).forEach(field => {
+            const input = document.getElementById(field);
+            if (input && formData[field]) {
+                input.value = formData[field];
+            }
+        });
+    } catch (error) {
+        console.error('Error loading saved form data:', error);
+    }
+}
+
 // Set up event listeners
 function setupEventListeners() {
     const applyCouponBtn = document.getElementById('applyCoupon');
@@ -219,7 +281,7 @@ function setupEventListeners() {
 
         if (validCoupons[couponCode]) {
             discount = validCoupons[couponCode];
-            saveCoupon(couponCode); // Save the valid coupon
+            saveCoupon(couponCode);
             try {
                 const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
                 if (currentUser && currentUser.email) {
@@ -252,16 +314,27 @@ function setupEventListeners() {
             }
         } else {
             discount = 0;
-            saveCoupon(null); // Remove any saved coupon
+            saveCoupon(null);
             showNotification('Invalid coupon code!', 'error');
             const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
             if (currentUser && currentUser.email) {
                 const cartKey = `cart_${currentUser.email}`;
                 const storedCart = JSON.parse(localStorage.getItem(cartKey)) || [];
                 const cart = storedCart
+                    .filter(item => item && item.id && Number.isInteger(item.quantity) && item.quantity > 0)
                     .map(item => {
                         const product = products.find(p => p.id === item.id);
-                        return product ? { ...item, ...product } : null;
+                        if (product) {
+                            return {
+                                id: item.id,
+                                quantity: item.quantity,
+                                title: product.title,
+                                price: product.price,
+                                image: product.image,
+                                category: product.category
+                            };
+                        }
+                        return null;
                     })
                     .filter(item => item !== null);
                 updateTotals(cart);
@@ -272,19 +345,21 @@ function setupEventListeners() {
     // Handle form submission
     placeOrderBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        
+
         try {
             const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
             if (!currentUser || !currentUser.email) {
-                alert('Please log in to place an order!');
-                window.location.href = 'Login.html';
+                showNotification('Please log in to place an order!', 'error');
+                setTimeout(() => {
+                    window.location.href = 'Login.html';
+                }, 1000);
                 return;
             }
 
             const cartKey = `cart_${currentUser.email}`;
             const storedCart = JSON.parse(localStorage.getItem(cartKey)) || [];
             if (storedCart.length === 0) {
-                alert('Your cart is empty!');
+                showNotification('Your cart is empty!', 'error');
                 return;
             }
 
@@ -303,7 +378,7 @@ function setupEventListeners() {
             });
 
             if (!isValid) {
-                alert('Please fill in all required fields');
+                showNotification('Please fill in all required fields', 'error');
                 return;
             }
 
@@ -324,10 +399,11 @@ function setupEventListeners() {
                 cart: storedCart.map(item => {
                     const product = products.find(p => p.id === item.id);
                     return {
-                        ...item,
-                        title: product.title,
-                        price: product.price,
-                        image: product.image
+                        id: item.id,
+                        quantity: item.quantity,
+                        title: product?.title || 'Unknown Product',
+                        price: product?.price || 0,
+                        image: product?.image || ''
                     };
                 }),
                 subtotal: document.getElementById('subtotal-amount').textContent,
@@ -345,7 +421,7 @@ function setupEventListeners() {
 
             // Save form data if checkbox is checked
             if (formData.saveInfo) {
-                localStorage.setItem('checkoutFormData', JSON.stringify({
+                localStorage.setItem(`checkoutFormData_${currentUser.email}`, JSON.stringify({
                     firstName: formData.firstName,
                     companyName: formData.companyName,
                     streetAddress: formData.streetAddress,
@@ -362,15 +438,15 @@ function setupEventListeners() {
             // Clear the cart and coupon after successful order
             localStorage.setItem(cartKey, '[]');
             saveCoupon(null);
-            
+
             // Show success message with order ID
-            alert(`Order placed successfully!\nYour order ID is: ${orderId}\nYou can track your order in your account.`);
-            
-            // Redirect to home page
-            window.location.href = 'Home.html';
+            showNotification(`Order placed successfully! Your order ID is: ${orderId}`, 'success');
+            setTimeout(() => {
+                window.location.href = 'Home.html';
+            }, 2000);
         } catch (error) {
             console.error('Error placing order:', error);
-            alert('An error occurred while placing your order. Please try again.');
+            showNotification('An error occurred while placing your order. Please try again.', 'error');
         }
     });
 
@@ -386,18 +462,4 @@ function setupEventListeners() {
             }
         });
     });
-}
-
-// Load saved form data if available
-function loadSavedFormData() {
-    const savedData = localStorage.getItem('checkoutFormData');
-    if (savedData) {
-        const formData = JSON.parse(savedData);
-        Object.keys(formData).forEach(field => {
-            const input = document.getElementById(field);
-            if (input) {
-                input.value = formData[field];
-            }
-        });
-    }
 }
