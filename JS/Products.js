@@ -4,22 +4,33 @@ let currentPage = 1;
 const itemsPerPage = 9;
 let cart = [];
 
-// Fetch products from API
-async function fetchProducts() {
-    try {
-        const response = await fetch('https://fakestoreapi.com/products');
-        products = await response.json();
-        filteredProducts = [...products];
-        loadUserCart();
-        displayProducts();
-        updatePagination();
-        updateCartIcon();
-        updateCartSidebar();
-        updateAuthLink();
-    } catch (error) {
-        console.error('Error fetching products:', error);
-        document.getElementById('productsGrid').innerHTML = '<p>Error loading products. Please try again later.</p>';
-    }
+// Fetch products from API using AJAX
+function fetchProducts() {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://fakestoreapi.com/products', true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                try {
+                    products = JSON.parse(xhr.responseText);
+                    filteredProducts = [...products];
+                    loadUserCart();
+                    displayProducts();
+                    updatePagination();
+                    updateCartIcon();
+                    updateCartSidebar();
+                    updateAuthLink();
+                } catch (error) {
+                    console.error('Error parsing products:', error);
+                    document.getElementById('productsGrid').innerHTML = '<p>Error loading products. Please try again later.</p>';
+                }
+            } else {
+                console.error('Error fetching products:', xhr.status);
+                document.getElementById('productsGrid').innerHTML = '<p>Error loading products. Please try again later.</p>';
+            }
+        }
+    };
+    xhr.send();
 }
 
 // Load user-specific cart from localStorage
@@ -313,12 +324,16 @@ function updateAuthLink() {
             sessionStorage.removeItem('currentUser');
             window.location.href = 'Login.html';
         });
-        userGreeting.textContent = `Welcome, ${currentUser.email.split('@')[0]}`;
-        userGreeting.style.display = 'block';
+        if (userGreeting) {
+            userGreeting.textContent = `Welcome, ${currentUser.email.split('@')[0]}`;
+            userGreeting.style.display = 'block';
+        }
     } else {
         authLink.textContent = 'Sign Up';
         authLink.href = 'Login.html';
-        userGreeting.style.display = 'none';
+        if (userGreeting) {
+            userGreeting.style.display = 'none';
+        }
     }
 }
 
@@ -352,7 +367,7 @@ function applyFiltersAndSort() {
     } else if (sortBy === 'price-asc') {
         tempProducts.sort((a, b) => a.price - b.price);
     } else if (sortBy === 'price-desc') {
-        tempProducts.sort((a, b) => b.price - b.price);
+        tempProducts.sort((a, b) => b.price - a.price);
     }
 
     filteredProducts = tempProducts;
@@ -409,6 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelector('.cart').addEventListener('click', openCartSidebar);
 });
+
 function addToWishlist(productId) {
     const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
     if (currentUser && currentUser.email) {
@@ -427,4 +443,9 @@ function addToWishlist(productId) {
             window.location.href = 'Login.html';
         }, 1000);
     }
+}
+
+// Placeholder for notification function (to be added in CSS)
+function showNotification(message, type) {
+    console.log(`${type}: ${message}`); // Placeholder, add actual notification logic with CSS
 }
