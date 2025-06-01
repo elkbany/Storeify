@@ -62,15 +62,52 @@ function saveCoupon(couponCode) {
     }
 }
 
-// Load cart items from localStorage
+// Load cart items from localStorage or editOrder
 async function loadCartItems() {
     try {
         const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-        if (currentUser && currentUser.email) {
+        if (!currentUser || !currentUser.email) {
+            showNotification('Please log in to view your cart!', 'error');
+            setTimeout(() => {
+                window.location.href = 'Login.html';
+            }, 1000);
+            return;
+        }
+
+        let cart = [];
+        const editOrder = JSON.parse(sessionStorage.getItem('editOrder'));
+
+        if (editOrder && editOrder.cart) {
+            // If editing an order, use the cart from editOrder
+            cart = editOrder.cart.map(item => ({
+                id: item.id,
+                quantity: item.quantity,
+                title: item.title,
+                price: item.price,
+                image: item.image,
+                category: item.category || ''
+            }));
+            // Populate form with saved address
+            if (editOrder.shippingAddress) {
+                document.getElementById('firstName').value = editOrder.shippingAddress.firstName || '';
+                document.getElementById('companyName').value = editOrder.shippingAddress.companyName || '';
+                document.getElementById('streetAddress').value = editOrder.shippingAddress.streetAddress || '';
+                document.getElementById('apartment').value = editOrder.shippingAddress.apartment || '';
+                document.getElementById('townCity').value = editOrder.shippingAddress.townCity || '';
+                document.getElementById('phone').value = editOrder.phone || '';
+                document.getElementById('email').value = editOrder.email || '';
+            }
+            // Restore coupon if it was applied
+            if (editOrder.appliedCoupon && validCoupons[editOrder.appliedCoupon]) {
+                discount = editOrder.discountAmount || 0;
+                document.getElementById('couponCode').value = editOrder.appliedCoupon;
+                showNotification(`Coupon restored: ${editOrder.appliedCoupon} (${discount * 100}% off)`, 'success');
+            }
+        } else {
+            // Otherwise, load from cart in localStorage
             const cartKey = `cart_${currentUser.email}`;
             const storedCart = JSON.parse(localStorage.getItem(cartKey)) || [];
-
-            const cart = storedCart
+            cart = storedCart
                 .filter(item => item && item.id && Number.isInteger(item.quantity) && item.quantity > 0)
                 .map(item => {
                     const product = products.find(p => p.id === item.id);
@@ -87,15 +124,10 @@ async function loadCartItems() {
                     return null;
                 })
                 .filter(item => item !== null);
-
-            displayCartItems(cart);
-            updateTotals(cart);
-        } else {
-            showNotification('Please log in to view your cart!', 'error');
-            setTimeout(() => {
-                window.location.href = 'Login.html';
-            }, 1000);
         }
+
+        displayCartItems(cart);
+        updateTotals(cart);
     } catch (error) {
         console.error('Error loading cart:', error);
         displayCartItems([]);
@@ -184,22 +216,38 @@ function showNotification(message, type) {
     }, 3000);
 }
 
-// Save order to localStorage
+// Save or update order to localStorage
 function saveOrder(orderData) {
     try {
         const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
         if (currentUser && currentUser.email) {
             const ordersKey = `orders_${currentUser.email}`;
             const existingOrders = JSON.parse(localStorage.getItem(ordersKey)) || [];
+            const editOrder = JSON.parse(sessionStorage.getItem('editOrder'));
+
+            let orderId;
+            let orderIndex = -1;
+
+            if (editOrder) {
+                orderId = editOrder.orderId;
+                orderIndex = existingOrders.findIndex(order => order.orderId === orderId);
+            }
 
             const newOrder = {
                 ...orderData,
-                orderId: `ORD-${Date.now()}`,
+                orderId: orderId || `ORD-${Date.now()}`,
                 orderDate: new Date().toISOString(),
                 status: 'Pending'
             };
 
-            existingOrders.push(newOrder);
+            if (orderIndex !== -1) {
+                // Update existing order
+                existingOrders[orderIndex] = newOrder;
+            } else {
+                // Add new order
+                existingOrders.push(newOrder);
+            }
+
             localStorage.setItem(ordersKey, JSON.stringify(existingOrders));
             return newOrder.orderId;
         }
@@ -223,11 +271,10 @@ function loadSavedFormData() {
         const user = users.find(u => u.email === currentUser.email);
 
         if (user) {
-            // Determine if user has edited their profile
             const hasEditedProfile = (
-                (user.name && user.name.trim() && user.name.trim() !== user.email) || // Name is set and not just email
-                (user.phone && user.phone.trim()) || // Phone is set
-                (user.company && user.company.trim()) // Company is set
+                (user.name && user.name.trim() && user.name.trim() !== user.email) ||
+                (user.phone && user.phone.trim()) ||
+                (user.company && user.company.trim())
             );
 
             if (hasEditedProfile) {
@@ -245,11 +292,9 @@ function loadSavedFormData() {
         const savedCheckoutData = localStorage.getItem(checkoutKey);
         if (savedCheckoutData) {
             const checkoutData = JSON.parse(savedCheckoutData);
-            // Always use checkout data for address fields
             formData.streetAddress = checkoutData.streetAddress || '';
             formData.apartment = checkoutData.apartment || '';
             formData.townCity = checkoutData.townCity || '';
-            // Use checkout data for other fields only if user data is not used
             if (!useUserData) {
                 formData.firstName = checkoutData.firstName || '';
                 formData.companyName = checkoutData.companyName || '';
@@ -258,13 +303,16 @@ function loadSavedFormData() {
             }
         }
 
-        // Populate form fields
-        Object.keys(formData).forEach(field => {
-            const input = document.getElementById(field);
-            if (input && formData[field]) {
-                input.value = formData[field];
-            }
-        });
+        // Populate form fields (only if not already populated by editOrder)
+        const editOrder = JSON.parse(sessionStorage.getItem('editOrder'));
+        if (!editOrder) {
+            Object.keys(formData).forEach(field => {
+                const input = document.getElementById(field);
+                if (input && formData[field]) {
+                    input.value = formData[field];
+                }
+            });
+        }
     } catch (error) {
         console.error('Error loading saved form data:', error);
     }
@@ -285,9 +333,52 @@ function setupEventListeners() {
             try {
                 const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
                 if (currentUser && currentUser.email) {
+                    let cart = [];
+                    const editOrder = JSON.parse(sessionStorage.getItem('editOrder'));
+                    if (editOrder && editOrder.cart) {
+                        cart = editOrder.cart;
+                    } else {
+                        const cartKey = `cart_${currentUser.email}`;
+                        const storedCart = JSON.parse(localStorage.getItem(cartKey)) || [];
+                        cart = storedCart
+                            .filter(item => item && item.id && Number.isInteger(item.quantity) && item.quantity > 0)
+                            .map(item => {
+                                const product = products.find(p => p.id === item.id);
+                                if (product) {
+                                    return {
+                                        id: item.id,
+                                        quantity: item.quantity,
+                                        title: product.title,
+                                        price: product.price,
+                                        image: product.image,
+                                        category: product.category
+                                    };
+                                }
+                                return null;
+                            })
+                            .filter(item => item !== null);
+                    }
+                    updateTotals(cart);
+                    showNotification(`Coupon applied: ${couponCode} (${discount * 100}% off)`, 'success');
+                }
+            } catch (error) {
+                console.error('Error applying coupon:', error);
+                showNotification('Error applying coupon', 'error');
+            }
+        } else {
+            discount = 0;
+            saveCoupon(null);
+            showNotification('Invalid coupon code!', 'error');
+            const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+            if (currentUser && currentUser.email) {
+                let cart = [];
+                const editOrder = JSON.parse(sessionStorage.getItem('editOrder'));
+                if (editOrder && editOrder.cart) {
+                    cart = editOrder.cart;
+                } else {
                     const cartKey = `cart_${currentUser.email}`;
                     const storedCart = JSON.parse(localStorage.getItem(cartKey)) || [];
-                    const cart = storedCart
+                    cart = storedCart
                         .filter(item => item && item.id && Number.isInteger(item.quantity) && item.quantity > 0)
                         .map(item => {
                             const product = products.find(p => p.id === item.id);
@@ -304,39 +395,7 @@ function setupEventListeners() {
                             return null;
                         })
                         .filter(item => item !== null);
-
-                    updateTotals(cart);
-                    showNotification(`Coupon applied: ${couponCode} (${discount * 100}% off)`, 'success');
                 }
-            } catch (error) {
-                console.error('Error applying coupon:', error);
-                showNotification('Error applying coupon', 'error');
-            }
-        } else {
-            discount = 0;
-            saveCoupon(null);
-            showNotification('Invalid coupon code!', 'error');
-            const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-            if (currentUser && currentUser.email) {
-                const cartKey = `cart_${currentUser.email}`;
-                const storedCart = JSON.parse(localStorage.getItem(cartKey)) || [];
-                const cart = storedCart
-                    .filter(item => item && item.id && Number.isInteger(item.quantity) && item.quantity > 0)
-                    .map(item => {
-                        const product = products.find(p => p.id === item.id);
-                        if (product) {
-                            return {
-                                id: item.id,
-                                quantity: item.quantity,
-                                title: product.title,
-                                price: product.price,
-                                image: product.image,
-                                category: product.category
-                            };
-                        }
-                        return null;
-                    })
-                    .filter(item => item !== null);
                 updateTotals(cart);
             }
         }
@@ -356,9 +415,30 @@ function setupEventListeners() {
                 return;
             }
 
+            let cart = [];
+            const editOrder = JSON.parse(sessionStorage.getItem('editOrder'));
             const cartKey = `cart_${currentUser.email}`;
             const storedCart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            if (storedCart.length === 0) {
+
+            if (editOrder && editOrder.cart) {
+                cart = editOrder.cart;
+            } else {
+                cart = storedCart
+                    .filter(item => item && item.id && Number.isInteger(item.quantity) && item.quantity > 0)
+                    .map(item => {
+                        const product = products.find(p => p.id === item.id);
+                        return product ? {
+                            id: item.id,
+                            quantity: item.quantity,
+                            title: product.title,
+                            price: product.price,
+                            image: product.image
+                        } : null;
+                    })
+                    .filter(item => item !== null);
+            }
+
+            if (cart.length === 0) {
                 showNotification('Your cart is empty!', 'error');
                 return;
             }
@@ -396,16 +476,7 @@ function setupEventListeners() {
                 email: document.getElementById('email').value,
                 saveInfo: document.getElementById('saveInfo').checked,
                 paymentMethod: paymentMethod,
-                cart: storedCart.map(item => {
-                    const product = products.find(p => p.id === item.id);
-                    return {
-                        id: item.id,
-                        quantity: item.quantity,
-                        title: product?.title || 'Unknown Product',
-                        price: product?.price || 0,
-                        image: product?.image || ''
-                    };
-                }),
+                cart: cart,
                 subtotal: document.getElementById('subtotal-amount').textContent,
                 total: document.getElementById('total-amount').textContent,
                 appliedCoupon: discount > 0 ? document.getElementById('couponCode').value : null,
@@ -435,12 +506,13 @@ function setupEventListeners() {
             // Save the order and get the order ID
             const orderId = saveOrder(formData);
 
-            // Clear the cart and coupon after successful order
+            // Clear the cart, editOrder, and coupon after successful order
             localStorage.setItem(cartKey, '[]');
+            sessionStorage.removeItem('editOrder');
             saveCoupon(null);
 
             // Show success message with order ID
-            showNotification(`Order placed successfully! Your order ID is: ${orderId}`, 'success');
+            showNotification(`Order ${editOrder ? 'updated' : 'placed'} successfully! Your order ID is: ${orderId}`, 'success');
             setTimeout(() => {
                 window.location.href = 'Home.html';
             }, 2000);
