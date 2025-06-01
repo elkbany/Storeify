@@ -117,6 +117,10 @@ window.onload = function() {
         document.querySelector('.form-toggle').style.display = 'none';
     } else {
         greeting.style.display = 'none';
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('loginBtn').classList.add('active');
+        document.getElementById('registerBtn').classList.remove('active');
     }
     document.getElementById('registerBtn').onclick = function() { switchForm('register'); };
     document.getElementById('loginBtn').onclick = function() { switchForm('login'); };
