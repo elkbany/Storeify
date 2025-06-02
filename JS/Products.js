@@ -40,7 +40,6 @@ function loadUserCart() {
         if (currentUser && currentUser.email) {
             const cartKey = `cart_${currentUser.email}`;
             const storedCart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            // Reconstruct cart with product details
             cart = storedCart
                 .filter(item => item && item.id && Number.isInteger(item.quantity) && item.quantity > 0)
                 .map(item => {
@@ -75,7 +74,6 @@ function saveUserCart() {
         const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
         if (currentUser && currentUser.email) {
             const cartKey = `cart_${currentUser.email}`;
-            // Save only id and quantity
             const cartToSave = cart.map(item => ({
                 id: item.id,
                 quantity: item.quantity
@@ -98,6 +96,11 @@ function displayProducts() {
 
     document.getElementById('viewed-items').textContent = Math.min(end, filteredProducts.length);
     document.getElementById('total-items').textContent = filteredProducts.length;
+
+    if (paginatedProducts.length === 0) {
+        productsGrid.innerHTML = '<p>No products found matching your criteria.</p>';
+        return;
+    }
 
     paginatedProducts.forEach(product => {
         const productCard = document.createElement('div');
@@ -341,24 +344,27 @@ function updateAuthLink() {
 function applyFiltersAndSort() {
     let tempProducts = [...products];
 
+    // Apply search filter
+    const searchInput = document.querySelector('.search-bar input');
+    const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : '';
+    if (searchTerm) {
+        tempProducts = tempProducts.filter(product =>
+            product.title.toLowerCase().includes(searchTerm) ||
+            product.category.toLowerCase().includes(searchTerm)
+        );
+    }
+
+    // Apply category filter
     const category = document.getElementById('category-filter').value;
     if (category) {
         tempProducts = tempProducts.filter(product => product.category === category);
     }
 
+    // Apply price filter
     const maxPrice = parseFloat(document.getElementById('price-range').value);
     tempProducts = tempProducts.filter(product => product.price <= maxPrice);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const searchTerm = urlParams.get('search');
-    if (searchTerm) {
-        const searchLower = searchTerm.toLowerCase();
-        tempProducts = tempProducts.filter(product =>
-            product.title.toLowerCase().includes(searchLower) ||
-            product.category.toLowerCase().includes(searchLower)
-        );
-    }
-
+    // Apply sorting
     const sortBy = document.getElementById('sort-by').value;
     if (sortBy === 'title-asc') {
         tempProducts.sort((a, b) => a.title.localeCompare(b.title));
@@ -388,6 +394,24 @@ function updatePagination() {
 document.addEventListener('DOMContentLoaded', () => {
     fetchProducts();
 
+    const searchInput = document.querySelector('.search-bar input');
+    const searchButton = document.querySelector('.search-bar button');
+
+    // Real-time search on input
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            applyFiltersAndSort();
+        });
+    }
+
+    // Search on button click
+    if (searchButton) {
+        searchButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            applyFiltersAndSort();
+        });
+    }
+
     document.getElementById('category-filter').addEventListener('change', applyFiltersAndSort);
 
     const priceRange = document.getElementById('price-range');
@@ -416,12 +440,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.querySelector('.search-bar input')?.addEventListener('input', applyFiltersAndSort);
-    document.querySelector('.search-bar button')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        applyFiltersAndSort();
-    });
-
     document.querySelector('.cart').addEventListener('click', openCartSidebar);
 });
 
@@ -445,7 +463,28 @@ function addToWishlist(productId) {
     }
 }
 
-// Placeholder for notification function (to be added in CSS)
+// Show notification
 function showNotification(message, type) {
-    console.log(`${type}: ${message}`); // Placeholder, add actual notification logic with CSS
+    const notification = document.createElement('div');
+    notification.className = `cart-notification ${type}`;
+    notification.innerHTML = `
+        <i class="fa-solid fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+        <span>${message}</span>
+    `;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+
+    setTimeout(() => {
+        notification.classList.remove('show');
+        notification.classList.add('hide');
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
 }
