@@ -33,7 +33,7 @@ header {
     color: #333;
     text-transform: uppercase;
 }
-
+/* Navbar */
 nav {
     display: flex;
     gap: 20px;
@@ -120,7 +120,7 @@ main .banner {
     display: flex;
     align-items: center;
 }
-
+  
 .banner-text {
     text-align: center;
     color: white;
@@ -151,6 +151,7 @@ main .banner {
 .banner-text a:hover {
     text-decoration: underline;
 }
+
 
 .products-container {
     max-width: 85%;
